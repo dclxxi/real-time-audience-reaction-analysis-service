@@ -15,7 +15,7 @@
         <button class="stop-button">중지</button>
         <button class="play-button">녹화보기</button>
         <button class="capture-button">캡쳐하기</button>
-        <a class="video-download-button">다운로드</a>
+        <a class="video-download-button">비디오 다운로드</a>
         <a class="img-download-button">이미지 다운로드</a>
         <div class="video-container">
             <div class="video-item"><h2>녹화중</h2>
@@ -25,10 +25,13 @@
                 <video id="recording"></video>
             </div>
         </div>
-        <div>
-            <img id="image" width="200" height="150"/>
+        <div class="video-container">
+            <div class="video-item"><h2>이미지 캡쳐</h2>
+                <img id="image" width="250px" height="140px"/>
+            </div>
         </div>
     </div>
-    <script src="{% static 'record.js' %}"></script>
+</div>
+<script src="{% static 'record.js' %}"></script>
 </body>
 </html>
