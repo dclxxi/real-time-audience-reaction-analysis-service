@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Cam Record</title>
+    <link rel="stylesheet" href="{% static 'camera.css' %}">
+</head>
+<body>
+<div class="wrapper">
+    <div class="button-container">
+        <button class="record-button">녹화</button>
+        <button class="stop-button">중지</button>
+        <button class="play-button">녹화보기</button>
+        <button class="capture-button">캡쳐하기</button>
+        <a class="video-download-button">다운로드</a>
+        <a class="img-download-button">이미지 다운로드</a>
+        <div class="video-container">
+            <div class="video-item"><h2>녹화중</h2>
+                <video autoplay muted id="preview"></video>
+            </div>
+            <div class="video-item"><h2>미리보기</h2>
+                <video id="recording"></video>
+            </div>
+        </div>
+        <div>
+            <img id="image" width="200" height="150"/>
+        </div>
+    </div>
+    <script src="{% static 'record.js' %}"></script>
+</body>
+</html>
