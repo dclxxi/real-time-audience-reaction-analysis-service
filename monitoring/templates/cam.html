@@ -35,7 +35,7 @@
         canvas.toBlob(blob => {
             const formData = new FormData();
             formData.append('camera-image', blob);
-            fetch('/live/', {
+            fetch('/live/cam/', {
                 method: 'POST',
                 body: formData
             });
