@@ -9,6 +9,7 @@ const recordingPlayer = document.querySelector("#recording");
 
 let recorder;
 let recordedChunks;
+let captureIntervalId;
 let startTime;
 let elapsedTimeIntervalId;
 
@@ -18,6 +19,7 @@ function videoStart() {
         startRecording(previewPlayer.captureStream())
     })
 
+    captureIntervalId = setInterval(capture, 60000); // 1분
     startTime = Date.now();
     elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
 }
@@ -42,6 +44,11 @@ function startRecording(stream) {
 function stopRecording() {
     previewPlayer.srcObject.getTracks().forEach(track => track.stop());
     recorder.stop();
+
+    const recordedBlob = new Blob(recordedChunks, {type: "video/webm"});
+    sendFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
+
+    clearInterval(captureIntervalId);
 }
 
 function playRecording() {
@@ -64,7 +71,32 @@ function capture() {
         img.src = url;
         imgDownloadButton.href = url;
         imgDownloadButton.download = `capture_${new Date().toISOString()}.png`;
+
+        sendFile(blob).then(data => console.log(data)).catch(error => console.error(error));
     }, 'image/png');
+}
+
+async function sendFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    // formData.append('file', file, `capture_${new Date().toISOString()}.png`);
+
+    $.ajax({
+        url: '/live/media/',
+        data: formData,
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            console.log('성공');
+        },
+        error: function (request, status, error) {
+            console.log('에러');
+            console.log(request);
+            console.log(status);
+            console.log(error);
+        }
+    })
 }
 
 recordButton.addEventListener("click", videoStart);
