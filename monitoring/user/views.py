@@ -33,3 +33,23 @@ def signup(request):
 
     return render(request, 'user/signup.html')
 
+
+@csrf_exempt
+def login(request):
+    if request.method == 'GET':
+        return render(request, 'user/login.html')
+
+    if request.method == 'POST':
+        userid = request.POST.get('userid')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(userid=userid)
+        except User.DoesNotExist:
+            return render(request, 'user/login.html')
+
+        if check_password(password, user.password):
+            return HttpResponse("login successful")
+        else:
+            print("error: password")
+            return render(request, 'user/login.html')
