@@ -40,18 +40,18 @@ function playRecording() {
     console.log(recordingPlayer.src);
 }
 
-
 function capture() {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     const img = document.getElementById('image');
 
     context.drawImage(previewPlayer, 0, 0, canvas.width, canvas.height);
-    const dataURL = canvas.toDataURL();
-    img.src = dataURL;
-
-    imgDownloadButton.href = dataURL;
-    imgDownloadButton.download = `capture_${new Date().toISOString()}.png`;
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        img.src = url;
+        imgDownloadButton.href = url;
+        imgDownloadButton.download = `capture_${new Date().toISOString()}.png`;
+    }, 'image/png');
 }
 
 recordButton.addEventListener("click", videoStart);
