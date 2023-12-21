@@ -2,16 +2,30 @@ import os
 from uuid import uuid4
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from monitoring.settings import MEDIA_ROOT
-from .models import CameraImage
+from .models import CameraImage, Lecture
 
 
 # Create your views here.
+@csrf_exempt
 def info(request):
-    return HttpResponse("live/info 응답")
+    if request.method == 'GET':
+        return render(request, 'info.html')
+
+    if request.method == 'POST':
+        topic = request.POST.get('topic')
+        term = request.POST.get('term')
+
+        lecture = Lecture()
+        lecture.topic = topic
+        lecture.save()
+
+        return redirect("live:record", id=lecture.id, term=term)
+
+    return render(request, 'cam.html')
 
 
 @csrf_exempt
@@ -27,8 +41,12 @@ def cam(request):
 
 
 @csrf_exempt
-def record(request):
-    return render(request, 'record.html')
+def record(request, id, term):
+    if request.method == 'GET':
+        return render(request, 'record.html', context=dict(term=term))
+
+    if request.method == 'POST':
+        pass
 
 
 @csrf_exempt
