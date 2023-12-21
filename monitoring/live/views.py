@@ -37,6 +37,7 @@ def cam(request):
     context = {
         'images': images
     }
+
     return render(request, 'cam.html', context)
 
 
@@ -63,3 +64,12 @@ def get_capture_file(request):
                 destination.write(chunk)
 
     return HttpResponse(file)
+
+
+def lecture_list(request):
+    lectures = Lecture.objects.all()
+    context = {
+        'lectures': lectures
+    }
+
+    return render(request, 'lecture_list.html', context)

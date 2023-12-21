@@ -1,0 +1,19 @@
+<!-- lecture_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>강의 분석 결과</title>
+</head>
+<body>
+<h1>강의 분석 결과</h1>
+<ul>
+    {% for lecture in lectures %}
+        <li>
+            <p>주제: {{ lecture.topic }}</p>
+        </li>
+    {% empty %}
+        <li>강의가 없습니다</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
