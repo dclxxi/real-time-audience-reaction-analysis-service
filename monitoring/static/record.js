@@ -12,6 +12,7 @@ let recordedChunks;
 let captureIntervalId;
 let startTime;
 let elapsedTimeIntervalId;
+let term = parseInt(document.getElementById("term").dataset.term);
 
 function videoStart() {
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
@@ -19,7 +20,7 @@ function videoStart() {
         startRecording(previewPlayer.captureStream())
     })
 
-    captureIntervalId = setInterval(capture, 60000); // 1분
+    captureIntervalId = setInterval(capture, 1000 * term); // 1분
     startTime = Date.now();
     elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
 }
