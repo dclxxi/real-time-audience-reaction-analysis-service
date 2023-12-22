@@ -1,6 +1,7 @@
 import os
 from uuid import uuid4
 
+import moviepy.editor as mp
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -68,15 +69,21 @@ def get_capture_file(request):
 
 @csrf_exempt
 def get_video_file(request):
-    if request.method == "POST" and 'file' in request.FILES:
-        file = request.FILES['file']
+    if request.method == "POST" and "file" in request.FILES:
+        file = request.FILES["file"]
         uuid_name = uuid4().hex
 
-        blob_name = f'{uuid_name}.mp4'
+        blob_name = f"{uuid_name}.mp4"
         blob_path = os.path.join(MEDIA_ROOT, blob_name)
-        with default_storage.open(blob_path, 'wb+') as destination:
+        with default_storage.open(blob_path, "wb+") as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
+
+        mp3 = blob_path.split(".mp4")[0] + ".mp3"
+        mp.ffmpeg_tools.ffmpeg_extract_audio(blob_path, mp3)
+
+        if os.path.exists(blob_path):
+            os.remove(blob_path)
 
         return HttpResponse("video")
 
