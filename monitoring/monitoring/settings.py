@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "user",
     "live",
+    "report",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
