@@ -66,14 +66,19 @@ def get_capture_file(request):
         return HttpResponse("image")
 
 
+@csrf_exempt
+def get_video_file(request):
+    if request.method == "POST" and 'file' in request.FILES:
+        file = request.FILES['file']
         uuid_name = uuid4().hex
-        save_path = os.path.join(MEDIA_ROOT, uuid_name)
 
-        img = img.convert('RGB')
-        jpg_save_path = save_path + '.jpg'
-        img.save(jpg_save_path, 'JPEG')
+        blob_name = f'{uuid_name}.mp4'
+        blob_path = os.path.join(MEDIA_ROOT, blob_name)
+        with default_storage.open(blob_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
 
-        return HttpResponse(jpg_save_path)
+        return HttpResponse("video")
 
 
 def lecture_list(request):
