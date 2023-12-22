@@ -1,7 +1,7 @@
 import os
 from uuid import uuid4
 
-from PIL import Image
+from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -55,7 +55,16 @@ def record(request, id, term):
 def get_capture_file(request):
     if request.method == "POST" and 'file' in request.FILES:
         file = request.FILES['file']
-        img = Image.open(file)
+        uuid_name = uuid4().hex
+
+        blob_name = f'{uuid_name}.jpg'
+        blob_path = os.path.join(MEDIA_ROOT, blob_name)
+        with default_storage.open(blob_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+        return HttpResponse("image")
+
 
         uuid_name = uuid4().hex
         save_path = os.path.join(MEDIA_ROOT, uuid_name)
