@@ -16,11 +16,3 @@ class Lecture(models.Model):
 
     class Meta:
         db_table = 'lecture'
-
-
-class Feedback(models.Model):
-    time = models.TimeField()
-    content = models.TextField()
-
-    class Meta:
-        db_table = 'feedback'
