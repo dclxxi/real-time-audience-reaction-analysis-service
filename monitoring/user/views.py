@@ -18,6 +18,9 @@ def signup(request):
         name = request.POST.get('name')
         email = request.POST.get('email')
 
+        if not re.match('^[a-zA-Z0-9]{6,15}$', userid):
+            return render(request, 'user/signup.html', {'error': '아이디는 6~15자리의 영문자와 숫자로 이루어져야 합니다.'})
+
         if User.objects.filter(userid=userid).exists():
             return render(request, 'user/signup.html', {'error': '이미 존재하는 사용자 ID입니다.'})
 
