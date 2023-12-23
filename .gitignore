@@ -223,3 +223,7 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 monitoring/.idea/
+
+# Django migrations
+monitoring/*/migrations/*.py
+!monitoring/*/migrations/__init__.py
