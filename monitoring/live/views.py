@@ -1,4 +1,5 @@
 import os
+import os.path
 from uuid import uuid4
 
 import moviepy.editor as mp
@@ -6,16 +7,12 @@ from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-
-from monitoring.settings import MEDIA_ROOT
-from .models import CameraImage, Lecture
-
+from google.cloud import speech
 from google.cloud import storage
 from google.oauth2 import service_account
 
-import os.path
-
-from google.cloud import speech
+from monitoring.settings import MEDIA_ROOT
+from .models import CameraImage, Lecture
 
 KEY_PATH = "C:/Users/user/Downloads/infra-earth-408904-fcc745c63739.json"
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
@@ -95,7 +92,6 @@ def get_video_file(request):
         bucket_name = "stt-test-bucket-aivle"
         upload_file_name = f"{uuid_name}.mp3"
         upload_file_path = mp3
-        print("파일 이름", upload_file_path)
 
         bucket = client.get_bucket(bucket_name)
         mp3_blob = bucket.blob(upload_file_name)
