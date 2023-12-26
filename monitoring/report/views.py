@@ -6,13 +6,14 @@ from report.models import Reaction, Feedback
 
 
 def result(request, id):
-    if request.mehtod == 'GET':
+    if request.method == 'GET':
         lecture = get_object_or_404(Lecture, pk=id)
 
         reactions = Reaction.objects.filter(lecture=lecture)
         feedback = Feedback.objects.get(lecture=lecture)
 
         context = {
+            'lecture': lecture,
             'reactions': reactions,
             'feedback': feedback.content,
         }
