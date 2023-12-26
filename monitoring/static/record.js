@@ -14,6 +14,7 @@ let startTime;
 let elapsedTimeIntervalId;
 let lecture_id = document.getElementById("id").dataset.id;
 let term = parseInt(document.getElementById("term").dataset.term);
+let time = 0
 
 function videoStart() {
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
@@ -21,7 +22,7 @@ function videoStart() {
         startRecording(previewPlayer.captureStream())
     })
 
-    captureIntervalId = setInterval(capture, 1000 * term); // 1분
+    captureIntervalId = setInterval(capture, 60000 * term);
     startTime = Date.now();
     elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
 }
@@ -77,12 +78,15 @@ function capture() {
 
         sendImageFile(blob).then(data => console.log(data)).catch(error => console.error(error));
     }, 'image/png');
+
+    time += term;
 }
 
 async function sendImageFile(file) {
     const formData = new FormData();
+    formData.append('lecture_id', lecture_id);
+    formData.append('time', time);
     formData.append('file', file);
-    // formData.append('file', file, `capture_${new Date().toISOString()}.png`);
 
     $.ajax({
         url: '/live/media/',

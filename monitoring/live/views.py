@@ -14,7 +14,7 @@ from google.oauth2 import service_account
 from openai import OpenAI
 
 from monitoring.settings import MEDIA_ROOT
-from report.models import Feedback
+from report.models import Feedback, Reaction
 from .models import Lecture
 
 KEY_PATH = "C:/Users/user/Downloads/infra-earth-408904-fcc745c63739.json"
@@ -56,7 +56,10 @@ def record(request, id, term):
 @csrf_exempt
 def get_capture_file(request):
     if request.method == "POST" and "file" in request.FILES:
+        lecture_id = request.POST.get('lecture_id')
+        time = request.POST.get('time')
         file = request.FILES["file"]
+
         uuid_name = uuid4().hex
 
         blob_name = f"{uuid_name}.jpg"
@@ -64,6 +67,19 @@ def get_capture_file(request):
         with default_storage.open(blob_path, "wb+") as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
+
+        # mlflow
+
+        lecture = get_object_or_404(Lecture, pk=lecture_id)
+
+        reaction = Reaction()
+        reaction.lecture = lecture
+        reaction.time = time
+        reaction.concentration = 0
+        reaction.negative = 0
+        reaction.neutral = 0
+        reaction.positive = 0
+        reaction.save()
 
         return HttpResponse("image")
 
