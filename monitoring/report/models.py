@@ -17,7 +17,7 @@ class Reaction(models.Model):
 
 
 class Feedback(models.Model):
-    lecture = models.OneToOneField(Lecture, on_delete=models.CASCADE, primary_key=True)
+    reaction = models.OneToOneField(Reaction, on_delete=models.CASCADE, primary_key=True)
     content = models.TextField()
 
     class Meta:

@@ -12,20 +12,10 @@ let recordedChunks;
 let captureIntervalId;
 let startTime;
 let elapsedTimeIntervalId;
+let time;
 let lecture_id = document.getElementById("id").dataset.id;
 let term = parseInt(document.getElementById("term").dataset.term);
-let time = 0
 
-function videoStart() {
-    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
-        previewPlayer.srcObject = stream;
-        startRecording(previewPlayer.captureStream())
-    })
-
-    captureIntervalId = setInterval(capture, 60000 * term);
-    startTime = Date.now();
-    elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
-}
 
 function updateElapsedTime() {
     const elapsedTime = Date.now() - startTime;
@@ -35,20 +25,45 @@ function updateElapsedTime() {
     document.getElementById('elapsed-time').textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+function videoStart() {
+    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
+        previewPlayer.srcObject = stream;
+        startRecording(previewPlayer.captureStream())
+    })
+
+    captureIntervalId = setInterval(recording, 1000 * term);
+    startTime = Date.now();
+    elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
+
+    time = 0;
+}
+
+function recording() {
+    recorder.stop();
+    recorder.onstop = () => {
+        const recordedBlob = new Blob(recordedChunks, {type: "video/webm"});
+        sendVideoFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
+
+        recordedChunks = [];
+        recorder.start();
+    }
+
+    time += term;
+}
+
+
 function startRecording(stream) {
     recordedChunks = [];
     recorder = new MediaRecorder(stream);
     recorder.ondataavailable = (e) => {
         recordedChunks.push(e.data)
     }
+
     recorder.start();
 }
 
 function stopRecording() {
     previewPlayer.srcObject.getTracks().forEach(track => track.stop());
-    recorder.stop();
-
-    const recordedBlob = new Blob(recordedChunks, {type: "video/webm"});
 
     clearInterval(captureIntervalId);
 }
@@ -61,7 +76,7 @@ function playRecording() {
     downloadButton.download = `recording_${new Date()}.webm`;
     console.log(recordingPlayer.src);
 
-    sendVideoFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
+    // sendVideoFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
 }
 
 function capture() {
@@ -78,8 +93,6 @@ function capture() {
 
         sendImageFile(blob).then(data => console.log(data)).catch(error => console.error(error));
     }, 'image/png');
-
-    time += term;
 }
 
 async function sendImageFile(file) {
@@ -109,6 +122,7 @@ async function sendImageFile(file) {
 async function sendVideoFile(file) {
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
+    formData.append('time', time);
     formData.append('file', file);
 
     $.ajax({
@@ -132,4 +146,4 @@ async function sendVideoFile(file) {
 recordButton.addEventListener("click", videoStart);
 stopButton.addEventListener("click", stopRecording);
 playButton.addEventListener("click", playRecording);
-captureButton.addEventListener("click", capture);
+captureButton.addEventListener("click", recording);

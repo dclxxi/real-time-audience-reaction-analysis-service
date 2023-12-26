@@ -15,6 +15,7 @@ from openai import OpenAI
 
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback, Reaction
+from user.models import User
 from .models import Lecture
 
 KEY_PATH = "C:/Users/user/Downloads/infra-earth-408904-fcc745c63739.json"
@@ -37,6 +38,7 @@ def info(request):
 
         lecture = Lecture()
         lecture.topic = topic
+        lecture.user = get_object_or_404(User, pk=1)
         lecture.save()
 
         return redirect("live:record", id=lecture.id, term=term)
@@ -89,6 +91,7 @@ def get_video_file(request):
     if request.method == "POST" and "file" in request.FILES:
         file = request.FILES["file"]
         lecture_id = request.POST.get('lecture_id')
+        time = request.POST.get('time')
         uuid_name = uuid4().hex
 
         blob_name = f"{uuid_name}.mp4"
@@ -96,6 +99,19 @@ def get_video_file(request):
         with default_storage.open(blob_path, "wb+") as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
+
+        # mlflow
+
+        lecture = get_object_or_404(Lecture, pk=lecture_id)
+
+        reaction = Reaction()
+        reaction.lecture = lecture
+        reaction.time = time
+        reaction.concentration = 0
+        reaction.negative = 0
+        reaction.neutral = 0
+        reaction.positive = 0
+        reaction.save()
 
         mp3 = blob_path.split(".mp4")[0] + ".mp3"
         mp.ffmpeg_tools.ffmpeg_extract_audio(blob_path, mp3)
@@ -109,18 +125,16 @@ def get_video_file(request):
         mp3_blob.upload_from_filename(upload_file_path)
         print(mp3_blob.public_url)
 
-        lecture = get_object_or_404(Lecture, pk=lecture_id)
-
         audio_content = run_stt(upload_file_name)
-        feedback_content = chatGPT(lecture.topic, audio_content)
+        print('출력: ', audio_content)
+
+        # feedback_content = chatGPT(lecture.topic, audio_content)
+        feedback_content = f"{lecture.topic} 주제의 피드백입니다."
 
         feedback = Feedback()
-        feedback.lecture = lecture
+        feedback.reaction = reaction
         feedback.content = feedback_content
         feedback.save()
-
-        if os.path.exists(blob_path):
-            os.remove(blob_path)
 
         return HttpResponse("video")
 
@@ -156,7 +170,7 @@ def chatGPT(topic, prompt):
     completion = openai.chat.completions.create(model="gpt-3.5-turbo",
                                                 messages=[
                                                     {"role": "system", "content": "당신은 교육 전문가로서, 강의 내용에 대한 피드백을 "
-                                                                                  "제공해야 합니다. 강점, 약점, 개선 방법을 작성해주세요."},
+                                                                                  "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."},
                                                     {"role": "user", "content": content}
                                                 ])
     print(completion)
