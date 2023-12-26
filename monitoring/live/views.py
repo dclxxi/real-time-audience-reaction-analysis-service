@@ -53,7 +53,7 @@ def cam(request):
 @csrf_exempt
 def record(request, id, term):
     if request.method == "GET":
-        return render(request, "record.html", context=dict(term=term))
+        return render(request, "record.html", context=dict(id=id, term=term))
 
     if request.method == "POST":
         pass
@@ -78,6 +78,7 @@ def get_capture_file(request):
 def get_video_file(request):
     if request.method == "POST" and "file" in request.FILES:
         file = request.FILES["file"]
+        lecture_id = request.POST.get('lecture_id')
         uuid_name = uuid4().hex
 
         blob_name = f"{uuid_name}.mp4"
@@ -98,7 +99,13 @@ def get_video_file(request):
         mp3_blob.upload_from_filename(upload_file_path)
         print(mp3_blob.public_url)
 
-        run_stt(upload_file_name)
+        audio_content = run_stt(upload_file_name)
+        feedback_content = chatGPT(audio_content)
+
+        feedback = Feedback()
+        feedback.lecture = get_object_or_404(Lecture, pk=lecture_id)
+        feedback.content = feedback_content
+        feedback.save()
 
         if os.path.exists(blob_path):
             os.remove(blob_path)
@@ -125,8 +132,11 @@ def run_stt(upload_file_name):
     res = client.long_running_recognize(config=config, audio=audio)
     response = res.result()
 
+    audio_content = ''
     for result in response.results:
-        print("script:{}".format(result.alternatives[0].transcript))
+        audio_content += result.alternatives[0].transcript
+
+    return audio_content
 
 
 def lecture_list(request):

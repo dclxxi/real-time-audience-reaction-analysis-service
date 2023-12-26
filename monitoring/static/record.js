@@ -12,6 +12,7 @@ let recordedChunks;
 let captureIntervalId;
 let startTime;
 let elapsedTimeIntervalId;
+let lecture_id = document.getElementById("id").dataset.id;
 let term = parseInt(document.getElementById("term").dataset.term);
 
 function videoStart() {
@@ -103,6 +104,7 @@ async function sendImageFile(file) {
 
 async function sendVideoFile(file) {
     const formData = new FormData();
+    formData.append('lecture_id', lecture_id);
     formData.append('file', file);
 
     $.ajax({
