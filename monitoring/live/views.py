@@ -15,7 +15,7 @@ from openai import OpenAI
 
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback
-from .models import CameraImage, Lecture
+from .models import Lecture
 
 KEY_PATH = "C:/Users/user/Downloads/infra-earth-408904-fcc745c63739.json"
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
@@ -42,17 +42,6 @@ def info(request):
         return redirect("live:record", id=lecture.id, term=term)
 
     return render(request, "cam.html")
-
-
-@csrf_exempt
-def cam(request):
-    if request.method == "POST":
-        image = request.FILES.get("camera-image")
-        CameraImage.objects.create(image=image)
-    images = CameraImage.objects.all()
-    context = {"images": images}
-
-    return render(request, "cam.html", context)
 
 
 @csrf_exempt
