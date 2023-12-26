@@ -5,19 +5,24 @@ from uuid import uuid4
 import moviepy.editor as mp
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from google.cloud import speech
 from google.cloud import storage
 from google.oauth2 import service_account
+from openai import OpenAI
 
 from monitoring.settings import MEDIA_ROOT
+from report.models import Feedback
 from .models import CameraImage, Lecture
 
 KEY_PATH = "C:/Users/user/Downloads/infra-earth-408904-fcc745c63739.json"
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
 
 client = storage.Client(credentials=credentials, project=credentials.project_id)
+
+openai = OpenAI(api_key="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")  # 본인 API키로 수정해서 실행해주세요
 
 
 # Create your views here.
@@ -99,11 +104,13 @@ def get_video_file(request):
         mp3_blob.upload_from_filename(upload_file_path)
         print(mp3_blob.public_url)
 
+        lecture = get_object_or_404(Lecture, pk=lecture_id)
+
         audio_content = run_stt(upload_file_name)
-        feedback_content = chatGPT(audio_content)
+        feedback_content = chatGPT(lecture.topic, audio_content)
 
         feedback = Feedback()
-        feedback.lecture = get_object_or_404(Lecture, pk=lecture_id)
+        feedback.lecture = lecture
         feedback.content = feedback_content
         feedback.save()
 
@@ -137,6 +144,29 @@ def run_stt(upload_file_name):
         audio_content += result.alternatives[0].transcript
 
     return audio_content
+
+
+def chatGPT(topic, prompt):
+    content = f"강의 주제: {topic}\n강의 내용: {prompt}"
+    completion = openai.chat.completions.create(model="gpt-3.5-turbo",
+                                                messages=[
+                                                    {"role": "system", "content": "당신은 교육 전문가로서, 강의 내용에 대한 피드백을 "
+                                                                                  "제공해야 합니다. 강점, 약점, 개선 방법을 작성해주세요."},
+                                                    {"role": "user", "content": content}
+                                                ])
+    print(completion)
+    result = completion.choices[0].message.content
+
+    return result
+
+
+def imageGPT(prompt):
+    response = openai.images.generate(prompt=prompt,
+                                      n=1,
+                                      size="256x256")
+    result = response['data'][0]['url']
+
+    return result
 
 
 def lecture_list(request):
