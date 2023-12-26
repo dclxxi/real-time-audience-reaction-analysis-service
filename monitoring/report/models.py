@@ -6,7 +6,7 @@ from live.models import Lecture
 # Create your models here.
 class Reaction(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
-    time = models.TimeField()  # ~시간
+    time = models.IntegerField()
     concentration = models.IntegerField()
     negative = models.IntegerField()
     neutral = models.IntegerField()
