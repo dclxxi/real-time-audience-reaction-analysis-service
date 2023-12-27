@@ -22,3 +22,17 @@ def result(request, id):
 
     if request.method == 'POST':
         pass
+
+
+def list(request):
+    if request.method == 'GET':
+        lectures = Lecture.objects.filter(user=request.user)
+
+        context = {
+            'lectures': lectures,
+        }
+
+        return render(request, 'list.html', context)
+
+    if request.method == 'POST':
+        pass
