@@ -41,8 +41,14 @@ function videoStart() {
 function recording() {
     recorder.stop();
     recorder.onstop = () => {
-        const recordedBlob = new Blob(recordedChunks, {type: "video/webm"});
-        sendVideoFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
+        const video = new Blob(recordedChunks, {type: "video/webm"});
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        context.drawImage(previewPlayer, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(async (image) => {
+            await sendFile(image, video).catch(error => console.error(error));
+        }, 'image/png');
 
         recordedChunks = [];
         recorder.start();
@@ -76,54 +82,15 @@ function playRecording() {
     downloadButton.download = `recording_${new Date()}.webm`;
     console.log(recordingPlayer.src);
 
-    // sendVideoFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
+    // sendFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
 }
 
-function capture() {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const img = document.getElementById('image');
-
-    context.drawImage(previewPlayer, 0, 0, canvas.width, canvas.height);
-    canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        img.src = url;
-        imgDownloadButton.href = url;
-        imgDownloadButton.download = `capture_${new Date().toISOString()}.png`;
-
-        sendImageFile(blob).then(data => console.log(data)).catch(error => console.error(error));
-    }, 'image/png');
-}
-
-async function sendImageFile(file) {
+async function sendFile(image, video) {
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
     formData.append('time', time);
-    formData.append('file', file);
-
-    $.ajax({
-        url: '/live/media/',
-        data: formData,
-        method: 'POST',
-        processData: false,
-        contentType: false,
-        success: function (result) {
-            console.log('성공');
-        },
-        error: function (request, status, error) {
-            console.log('에러');
-            console.log(request);
-            console.log(status);
-            console.log(error);
-        }
-    })
-}
-
-async function sendVideoFile(file) {
-    const formData = new FormData();
-    formData.append('lecture_id', lecture_id);
-    formData.append('time', time);
-    formData.append('file', file);
+    formData.append('image', image);
+    formData.append('video', video);
 
     $.ajax({
         url: '/live/video/',
@@ -133,6 +100,14 @@ async function sendVideoFile(file) {
         contentType: false,
         success: function (result) {
             console.log('성공');
+            const data = $.parseJSON(result);
+            $('#reaction').empty()
+            $(data).each(function (i, val) {
+                $.each(val, function (k, v) {
+                    console.log(k + " : " + v);
+                    $('#reaction').append('<p>' + k + ' : ' + v + '</p>');
+                });
+            });
         },
         error: function (request, status, error) {
             console.log('에러');

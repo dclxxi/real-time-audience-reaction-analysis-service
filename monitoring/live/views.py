@@ -1,8 +1,11 @@
+import json
 import os
 import os.path
 from uuid import uuid4
 
+import cv2
 import moviepy.editor as mp
+import numpy as np
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
@@ -12,7 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from google.cloud import speech
 from google.cloud import storage
 from google.oauth2 import service_account
+from matplotlib import pyplot as plt
 from openai import OpenAI
+from tensorflow.keras.models import load_model
 
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback, Reaction
@@ -65,17 +70,17 @@ def record(request, id, term):
 
 @csrf_exempt
 def get_capture_file(request):
-    if request.method == "POST" and "file" in request.FILES:
+    if request.method == "POST" and "image" in request.FILES:
         lecture_id = request.POST.get('lecture_id')
         time = request.POST.get('time')
-        file = request.FILES["file"]
+        image = request.FILES["image"]
 
         uuid_name = uuid4().hex
 
         blob_name = f"{uuid_name}.jpg"
         blob_path = os.path.join(MEDIA_ROOT, blob_name)
         with default_storage.open(blob_path, "wb+") as destination:
-            for chunk in file.chunks():
+            for chunk in image.chunks():
                 destination.write(chunk)
 
         # mlflow
@@ -96,30 +101,41 @@ def get_capture_file(request):
 
 @csrf_exempt
 def get_video_file(request):
-    if request.method == "POST" and "file" in request.FILES:
-        file = request.FILES["file"]
+    if request.method == "POST" and "video" in request.FILES and "image" in request.FILES:
         lecture_id = request.POST.get('lecture_id')
         time = request.POST.get('time')
+        image = request.FILES["image"]
+        video = request.FILES["video"]
+
         uuid_name = uuid4().hex
 
-        blob_name = f"{uuid_name}.mp4"
+        blob_name = f"{uuid_name}.jpg"
         blob_path = os.path.join(MEDIA_ROOT, blob_name)
         with default_storage.open(blob_path, "wb+") as destination:
-            for chunk in file.chunks():
+            for chunk in image.chunks():
                 destination.write(chunk)
 
-        # mlflow
+        results = model(blob_path)
+
+        if sum(results.values()) == 0:
+            return HttpResponse(status=200)
 
         lecture = get_object_or_404(Lecture, pk=lecture_id)
 
         reaction = Reaction()
         reaction.lecture = lecture
         reaction.time = time
-        reaction.concentration = 0
-        reaction.negative = 0
-        reaction.neutral = 0
-        reaction.positive = 0
+        reaction.concentration = results.get('concentration')
+        reaction.negative = results.get('negative')
+        reaction.neutral = results.get('neutral')
+        reaction.positive = results.get('positive')
         reaction.save()
+
+        blob_name = f"{uuid_name}.mp4"
+        blob_path = os.path.join(MEDIA_ROOT, blob_name)
+        with default_storage.open(blob_path, "wb+") as destination:
+            for chunk in video.chunks():
+                destination.write(chunk)
 
         mp3 = blob_path.split(".mp4")[0] + ".mp3"
         mp.ffmpeg_tools.ffmpeg_extract_audio(blob_path, mp3)
@@ -144,7 +160,123 @@ def get_video_file(request):
         feedback.content = feedback_content
         feedback.save()
 
-        return HttpResponse("video")
+        return HttpResponse(json.dumps(results))
+
+
+def model(blob_path):
+    def load_detection_model(model_path):
+        detection_model = cv2.CascadeClassifier(model_path)
+        return detection_model
+
+    def detect_faces(detection_model, gray_image_array):
+        return detection_model.detectMultiScale(gray_image_array, 1.3, 5)
+
+    def draw_bounding_box(face_coordinates, image_array, color):
+        x, y, w, h = face_coordinates
+        cv2.rectangle(image_array, (x, y), (x + w, y + h), color, 2)
+
+    def apply_offsets(face_coordinates, offsets):
+        x, y, width, height = face_coordinates
+        x_off, y_off = offsets
+        return (x - x_off, x + width + x_off, y - y_off, y + height + y_off)
+
+    def draw_text(coordinates, image_array, text, color, x_offset=0, y_offset=0, font_scale=0.5, thickness=2):
+        x, y = coordinates[:2]
+        cv2.putText(image_array, text, (x + x_offset, y + y_offset), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color,
+                    thickness, cv2.LINE_AA)
+
+    def preprocess_input(x, v2=True):
+        x = x.astype('float32')
+        x = x / 255.0
+        if v2:
+            x = x - 0.5
+            x = x * 2.0
+        return x
+
+    image_path = blob_path
+    detection_model_path = 'haarcascade_frontalface_default.xml'
+    emotion_model_path = 'emotion_temp.h5'
+    emotion_labels = {0: 'angry', 1: 'disgust', 2: 'fear', 3: 'happy', 4: 'sad', 5: 'surprise', 6: 'neutral'}
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    emotion_offsets = (0, 0)
+    face_detection = load_detection_model(detection_model_path)
+    emotion_classifier = load_model(emotion_model_path, compile=False)
+    emotion_target_size = emotion_classifier.input_shape[1:3]
+    rgb_image = cv2.imread(image_path)
+    gray_image = cv2.imread(image_path, 0)
+
+    def highest_emotion(positive, neutral, negative):
+        if positive == max([positive, neutral, negative]):
+            return 'positive'
+        elif neutral == max([positive, neutral, negative]):
+            return 'neutral'
+        else:
+            return 'negative'
+
+    def engagement_score(scores):
+        if ((scores[6] > 0.6) | (scores[3] > 0.5) | (scores[5] > 0.6) | (scores[0] > 0.2) | (scores[1] > 0.2) | (
+                scores[2] > 0.3) | (scores[4] > 0.3)):
+            return ((scores[0] * 0.2) + (scores[1] * 0.2) + (scores[2] * 0.3) + (scores[3] * 0.7) + (
+                    scores[4] * 0.3) + (scores[5] * 0.7) + (scores[6] * 1.0))
+        else:
+            return 0
+
+    positives = []
+    neutrals = []
+    negatives = []
+    engagements = []
+    faces = detect_faces(face_detection, rgb_image)
+    for face_coordinates in faces:
+        x1, x2, y1, y2 = apply_offsets(face_coordinates, emotion_offsets)
+        gray_face = gray_image[y1:y2, x1:x2]
+        gray_face = cv2.resize(gray_face, (emotion_target_size))
+
+        gray_face = preprocess_input(gray_face, True)
+        gray_face = np.expand_dims(gray_face, 0)
+        gray_face = np.expand_dims(gray_face, -1)
+
+        emotion_label_arg = np.argmax(emotion_classifier.predict(gray_face))
+        engagement = engagement_score(emotion_classifier.predict(gray_face)[0])
+        positive = emotion_classifier.predict(gray_face)[0][3] + emotion_classifier.predict(gray_face)[0][5]
+        neutral = emotion_classifier.predict(gray_face)[0][6]
+        negative = emotion_classifier.predict(gray_face)[0][0] + emotion_classifier.predict(gray_face)[0][1] + \
+                   emotion_classifier.predict(gray_face)[0][2] + emotion_classifier.predict(gray_face)[0][4]
+        positives.append(positive)
+        neutrals.append(neutral)
+        negatives.append(negative)
+        engagements.append(engagement)
+        emotion_text = highest_emotion(positive, neutral, negative)
+        color = (0, 255, 255)
+
+        draw_bounding_box(face_coordinates, rgb_image, color)
+        draw_text(face_coordinates, rgb_image, emotion_text, color, -20, -20, 0.7, 2)
+    plt.imshow(rgb_image)
+    cv2.imwrite('result_emotion_image.jpg', rgb_image)
+
+    def calculate_percentage(emotion):
+        if len(emotion) == 0:
+            return 0
+        else:
+            return int(round(sum(emotion) / len(emotion), 2) * 100)
+
+    positive = calculate_percentage(positives)
+    neutral = calculate_percentage(neutrals)
+    negative = calculate_percentage(negatives)
+    concentration = calculate_percentage(engagements)
+    results = {
+        "positive": positive,
+        "neutral": neutral,
+        "negative": negative,
+        "concentration": concentration,
+    }
+    return results
+
+
+def calculate_percentage(emotion):
+    if len(emotion) == 0:
+        return 0
+    else:
+        return int(round(sum(emotion) / len(emotion), 2) * 100)
 
 
 def run_stt(upload_file_name):
