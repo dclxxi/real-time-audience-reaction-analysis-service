@@ -1,7 +1,7 @@
 # Create your views here.
 import re
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -84,3 +84,9 @@ def login_view(request):
             return HttpResponse("login successful")
         else:
             return render(request, 'user/login.html', {'error': "비밀번호가 올바르지 않습니다."})
+
+
+@csrf_exempt
+def logout_view(request):
+    logout(request)
+    return HttpResponse("logout successful")
