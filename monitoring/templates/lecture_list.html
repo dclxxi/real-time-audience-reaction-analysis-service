@@ -9,14 +9,54 @@
 {% if user.is_authenticated %}
     로그아웃
 {% endif %}
+<div>
+    <form method="get">
+        <input name="search" type="text" value="{{ request.GET.search }}">
+        <input type="submit" value="Search">
+    </form>
+</div>
 <ul>
     {% for lecture in lectures %}
         <li>
-            <p>주제: {{ lecture.topic }} - {{ lecture.datetime }}</p>
+            <p>{{ forloop.counter0|add:lectures.start_index }} {{ lecture.topic }} - {{ lecture.datetime }}</p>
         </li>
     {% empty %}
         <li>강의가 없습니다</li>
     {% endfor %}
 </ul>
+
+<div class="pagination">
+    <span class="step-links">
+    <a href="?page=1">처음</a>
+        {% if lectures.has_previous %}
+            <a href="?page={{ lectures.previous_page_number }}">이전</a>
+        {% else %}
+            <span class="disabled">이전</span>
+        {% endif %}
+
+        {% for i in lectures.paginator.page_range %}
+            {% if lectures.number == i %}
+                <span class="current"> {{ i }} </span>
+            {% else %}
+                <a href="?page={{ i }}"> {{ i }} </a>
+            {% endif %}
+        {% endfor %}
+
+        {% if lectures.has_next %}
+            <a href="?page={{ lectures.next_page_number }}">다음</a>
+        {% else %}
+            <span class="disabled">다음</span>
+        {% endif %}
+        <a href="?page={{ lectures.paginator.num_pages }}">마지막</a>
+    </span>
+</div>
 </body>
+<script>
+    window.onload = function () {
+        var orderSelect = document.getElementById('orderSelect');
+        orderSelect.onchange = function () {
+            this.form.submit();
+        };
+    };
+</script>
 </html>
