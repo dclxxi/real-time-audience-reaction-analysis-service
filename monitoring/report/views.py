@@ -14,12 +14,11 @@ def result(request, id):
         lecture = get_object_or_404(Lecture, pk=id)
 
         reactions = Reaction.objects.filter(lecture=lecture)
-        feedback = Feedback.objects.get(lecture=lecture)
+        reaction_feedbacks = [(reaction, Feedback.objects.filter(reaction=reaction).first()) for reaction in reactions]
 
         context = {
             'lecture': lecture,
-            'reactions': reactions,
-            'feedback': feedback.content,
+            'reaction_feedbacks': reaction_feedbacks,
         }
 
         return render(request, 'result.html', context)
