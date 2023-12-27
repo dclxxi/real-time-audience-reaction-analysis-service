@@ -19,8 +19,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from monitoring import views
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", views.main),
     path("live/", include("live.urls")),
     path("user/", include("user.urls")),
     path("report/", include("report.urls")),
