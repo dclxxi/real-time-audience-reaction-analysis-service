@@ -1,10 +1,12 @@
 # Create your views here.
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from live.models import Lecture
 from report.models import Reaction, Feedback
 
 
+@login_required
 def result(request, id):
     if request.method == 'GET':
         lecture = get_object_or_404(Lecture, pk=id)
@@ -24,6 +26,7 @@ def result(request, id):
         pass
 
 
+@login_required
 def list(request):
     if request.method == 'GET':
         lectures = Lecture.objects.filter(user=request.user)

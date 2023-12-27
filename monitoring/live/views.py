@@ -3,6 +3,7 @@ import os.path
 from uuid import uuid4
 
 import moviepy.editor as mp
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -28,6 +29,7 @@ openai = OpenAI(api_key="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")  
 
 # Create your views here.
 @csrf_exempt
+@login_required
 def info(request):
     if request.method == "GET":
         return render(request, "info.html")
@@ -47,6 +49,7 @@ def info(request):
 
 
 @csrf_exempt
+@login_required
 def record(request, id, term):
     if request.method == "GET":
         return render(request, "record.html", context=dict(id=id, term=term))

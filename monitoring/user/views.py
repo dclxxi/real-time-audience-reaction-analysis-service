@@ -4,7 +4,7 @@ import re
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from user.models import User
@@ -66,11 +66,13 @@ def signup_view(request):
 @csrf_exempt
 def login_view(request):
     if request.method == 'GET':
-        return render(request, 'user/login.html')
+        next_url = request.GET.get('next') or '/'
+        return render(request, 'user/login.html', {'next': next_url})
 
     if request.method == 'POST':
         userid = request.POST.get('userid')
         password = request.POST.get('password')
+        next_url = request.POST.get('next') or '/'
 
         try:
             user = User.objects.get(userid=userid)
@@ -81,7 +83,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return HttpResponse("login successful")
+            return redirect(next_url)
         else:
             return render(request, 'user/login.html', {'error': "비밀번호가 올바르지 않습니다."})
 
