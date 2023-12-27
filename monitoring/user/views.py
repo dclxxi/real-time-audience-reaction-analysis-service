@@ -1,7 +1,8 @@
 # Create your views here.
 import re
 
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +11,7 @@ from user.models import User
 
 
 @csrf_exempt
-def signup(request):
+def signup_view(request):
     if request.method == 'POST':
         userid = request.POST.get('userid')
         password = request.POST.get('password')
@@ -63,7 +64,7 @@ def signup(request):
 
 
 @csrf_exempt
-def login(request):
+def login_view(request):
     if request.method == 'GET':
         return render(request, 'user/login.html')
 
@@ -74,10 +75,12 @@ def login(request):
         try:
             user = User.objects.get(userid=userid)
         except User.DoesNotExist:
-            return render(request, 'user/login.html')
+            return render(request, 'user/login.html', {'error': "존재하지 않는 아이디입니다."})
 
-        if check_password(password, user.password):
+        user = authenticate(request, username=userid, password=password)
+
+        if user is not None:
+            login(request, user)
             return HttpResponse("login successful")
         else:
-            print("error: password")
-            return render(request, 'user/login.html')
+            return render(request, 'user/login.html', {'error': "비밀번호가 올바르지 않습니다."})
