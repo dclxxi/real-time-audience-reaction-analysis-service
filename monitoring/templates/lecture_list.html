@@ -6,10 +6,13 @@
 </head>
 <body>
 <h1>강의 분석 결과</h1>
+{% if user.is_authenticated %}
+    로그아웃
+{% endif %}
 <ul>
     {% for lecture in lectures %}
         <li>
-            <p>주제: {{ lecture.topic }}</p>
+            <p>주제: {{ lecture.topic }} - {{ lecture.datetime }}</p>
         </li>
     {% empty %}
         <li>강의가 없습니다</li>

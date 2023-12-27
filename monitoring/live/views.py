@@ -189,10 +189,3 @@ def imageGPT(prompt):
     result = response['data'][0]['url']
 
     return result
-
-
-def lecture_list(request):
-    lectures = Lecture.objects.all()
-    context = {"lectures": lectures}
-
-    return render(request, "lecture_list.html", context)

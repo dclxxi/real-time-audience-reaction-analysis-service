@@ -35,7 +35,7 @@ def list(request):
             'lectures': lectures,
         }
 
-        return render(request, 'list.html', context)
+        return render(request, 'lecture_list.html', context)
 
     if request.method == 'POST':
         pass
