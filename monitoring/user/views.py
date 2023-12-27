@@ -83,6 +83,10 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+
+            if next_url.startswith("/live/record/"):
+                return redirect("live:info")
+
             return redirect(next_url)
         else:
             return render(request, 'user/login.html', {'error': "비밀번호가 올바르지 않습니다."})

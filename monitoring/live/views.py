@@ -40,17 +40,22 @@ def info(request):
 
         lecture = Lecture()
         lecture.topic = topic
-        lecture.user = get_object_or_404(User, pk=1)
+        lecture.user = get_object_or_404(User, pk=request.user.pk)
         lecture.save()
 
-        return redirect("live:record", id=lecture.id, term=term)
+        request.session['lecture_id'] = lecture.id
 
-    return render(request, "cam.html")
+        return redirect("live:record", id=lecture.id, term=term)
 
 
 @csrf_exempt
 @login_required
 def record(request, id, term):
+    session_lecture_id = request.session.get('lecture_id')
+
+    if not session_lecture_id or session_lecture_id != id:
+        return redirect("live:info")
+
     if request.method == "GET":
         return render(request, "record.html", context=dict(id=id, term=term))
 
