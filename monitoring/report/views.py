@@ -1,5 +1,7 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 
 from live.models import Lecture
@@ -29,10 +31,20 @@ def result(request, id):
 @login_required
 def list(request):
     if request.method == 'GET':
-        lectures = Lecture.objects.filter(user=request.user)
+        search_query = request.GET.get('search', '')
+        page_number = request.GET.get('page', 1)
+
+        lectures = (Lecture.objects
+                    .filter(Q(user=request.user), Q(topic__icontains=search_query))
+                    .order_by('-datetime')
+                    .distinct()
+                    )
+
+        paginator = Paginator(lectures, 10)
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'lectures': lectures,
+            'lectures': page_obj,
         }
 
         return render(request, 'lecture_list.html', context)
