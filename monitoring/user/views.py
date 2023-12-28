@@ -89,7 +89,7 @@ def signup_view(request):
         user.email = email
         user.save()
 
-        return HttpResponse("signup successful")
+        return render(request, "user/login_page.html")
 
     return render(request, "user/sign_up.html")
 
