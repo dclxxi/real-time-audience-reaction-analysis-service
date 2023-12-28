@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+        <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 </head>
 <body>
-<form method="post">
+<form method="post" enctype="multipart/form-data" action="{% url 'user:signup' %}">
+    <input type="file" name="profile_image" id="profile_image" onchange="loadFile(this)" style="display: none">
+    <button id="button_profile_upload" type="button" class="btn btn-light">프로필 편집</button>
+    <div id="fileName"></div>
+    <br>
     <label for="userid">아이디:</label><br>
     <input type="text" id="userid" name="userid" required><br>
     <label for="password">비밀번호:</label><br>
@@ -19,5 +25,15 @@
     <input type="submit" value="회원가입">
 </form>
 <p>{{ error }}</p>
+<script>
+    function loadFile(input){
+        var file = input.files[0];
+        var name = document.getElementById('fileName');
+        name.textContent = file.name;
+    }
+    $('#button_profile_upload').click(function(){
+        $('#profile_image').click();
+    })
+</script>
 </body>
 </html>
