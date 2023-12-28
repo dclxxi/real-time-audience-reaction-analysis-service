@@ -38,16 +38,16 @@ def signup_view(request):
         if not re.match("^[a-zA-Z0-9]{6,15}$", userid):
             return render(
                 request,
-                "user/signup.html",
+                "user/sign_up.html",
                 {"error": "아이디는 6~15자리의 영문자와 숫자로 이루어져야 합니다."},
             )
 
         if User.objects.filter(userid=userid).exists():
-            return render(request, "user/signup.html", {"error": "이미 존재하는 사용자 ID입니다."})
+            return render(request, "user/sign_up.html", {"error": "이미 존재하는 사용자 ID입니다."})
 
         if len(password) < 8:
             return render(
-                request, "user/signup.html", {"error": "비밀번호는 최소 8자 이상이어야 합니다."}
+                request, "user/sign_up.html", {"error": "비밀번호는 최소 8자 이상이어야 합니다."}
             )
 
         count = 0
@@ -66,7 +66,7 @@ def signup_view(request):
         if count < 3:
             return render(
                 request,
-                "user/signup.html",
+                "user/sign_up.html",
                 {"error": "비밀번호는 숫자, 소문자, 대문자, 특수 문자 중 최소 3가지를 포함해야 합니다."},
             )
 
@@ -74,12 +74,12 @@ def signup_view(request):
         if userid in password or name in password or email_prefix in password:
             return render(
                 request,
-                "user/signup.html",
+                "user/sign_up.html",
                 {"error": "비밀번호에 개인 정보나 일반적인 단어를 사용할 수 없습니다."},
             )
 
         if password != password_confirm:
-            return render(request, "user/signup.html", {"error": "비밀번호가 일치하지 않습니다."})
+            return render(request, "user/sign_up.html", {"error": "비밀번호가 일치하지 않습니다."})
 
         user = User()
         user.profile_image = profile_image
@@ -91,14 +91,14 @@ def signup_view(request):
 
         return HttpResponse("signup successful")
 
-    return render(request, "user/signup.html")
+    return render(request, "user/sign_up.html")
 
 
 @csrf_exempt
 def login_view(request):
     if request.method == "GET":
         next_url = request.GET.get("next") or "/"
-        return render(request, "user/login.html", {"next": next_url})
+        return render(request, "user/login_page.html", {"next": next_url})
 
     if request.method == "POST":
         userid = request.POST.get("userid")
@@ -108,7 +108,7 @@ def login_view(request):
         try:
             user = User.objects.get(userid=userid)
         except User.DoesNotExist:
-            return render(request, "user/login.html", {"error": "존재하지 않는 아이디입니다."})
+            return render(request, "user/login_page.html", {"error": "존재하지 않는 아이디입니다."})
 
         user = authenticate(request, username=userid, password=password)
 
@@ -120,7 +120,7 @@ def login_view(request):
 
             return redirect(next_url)
         else:
-            return render(request, "user/login.html", {"error": "비밀번호가 올바르지 않습니다."})
+            return render(request, "user/login_page.html", {"error": "비밀번호가 올바르지 않습니다."})
 
 
 @csrf_exempt
