@@ -62,7 +62,7 @@ def record(request, id, term):
         return redirect("live:info")
 
     if request.method == "GET":
-        return render(request, "record.html", context=dict(id=id, term=term))
+        return render(request, "live/analysis_page.html", context=dict(id=id, term=term))
 
     if request.method == "POST":
         pass

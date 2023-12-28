@@ -23,7 +23,7 @@ def result(request, id):
             'reaction_feedbacks': reaction_feedbacks,
         }
 
-        return render(request, 'result.html', context)
+        return render(request, 'report/report_page.html', context)
 
     if request.method == 'POST':
         pass
@@ -48,7 +48,7 @@ def list(request):
             'lectures': page_obj,
         }
 
-        return render(request, 'lecture_list.html', context)
+        return render(request, 'report/storage_list.html', context)
 
     if request.method == 'POST':
         pass
@@ -58,6 +58,7 @@ def list(request):
 def delete_lecture(request):
     if request.method == "GET":
         pass
+
     if request.method == "POST":
         lecture_id = request.POST.get("lecture_id", None)
         lecture = Lecture.objects.get(id=lecture_id)
