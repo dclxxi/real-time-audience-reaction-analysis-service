@@ -1,5 +1,7 @@
 # Create your views here.
+import os
 import re
+from uuid import uuid4
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
@@ -7,17 +9,31 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
+from monitoring.settings import MEDIA_ROOT
 from user.models import User
 
 
 @csrf_exempt
 def signup_view(request):
     if request.method == "POST":
+        file = request.FILES.get("profile_image")
         userid = request.POST.get("userid")
         password = request.POST.get("password")
         password_confirm = request.POST.get("password_confirm")
         name = request.POST.get("name")
         email = request.POST.get("email")
+
+        if file is None:
+            profile_image = "default_profile.jpg"
+        else:
+            uuid_name = uuid4().hex
+            save_path = os.path.join(MEDIA_ROOT, uuid_name)
+
+            with open(save_path, "wb+") as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+
+            profile_image = uuid_name
 
         if not re.match("^[a-zA-Z0-9]{6,15}$", userid):
             return render(
@@ -66,13 +82,14 @@ def signup_view(request):
             return render(request, "user/sign_up.html", {"error": "비밀번호가 일치하지 않습니다."})
 
         user = User()
+        user.profile_image = profile_image
         user.userid = userid
         user.password = make_password(password)
         user.name = name
         user.email = email
         user.save()
 
-        return HttpResponse("signup successful")
+        return redirect("user:login")
 
     return render(request, "user/sign_up.html")
 
@@ -103,12 +120,10 @@ def login_view(request):
 
             return redirect(next_url)
         else:
-            return render(
-                request, "user/login_page.html", {"error": "비밀번호가 올바르지 않습니다."}
-            )
+            return render(request, "user/login_page.html", {"error": "비밀번호가 올바르지 않습니다."})
 
 
 @csrf_exempt
 def logout_view(request):
     logout(request)
-    return redirect("/")
+    return redirect('/')
