@@ -62,7 +62,7 @@ def record(request, id, term):
         return redirect("live:info")
 
     if request.method == "GET":
-        return render(request, "record.html", context=dict(id=id, term=term))
+        return render(request, "live/analysis_page.html", context=dict(id=id, term=term))
 
     if request.method == "POST":
         pass
@@ -97,6 +97,21 @@ def get_capture_file(request):
         reaction.save()
 
         return HttpResponse("image")
+
+
+@csrf_exempt
+def time(request):
+    if request.method == "POST":
+        lecture_id = request.POST.get('lecture_id')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+
+        lecture = get_object_or_404(Lecture, pk=lecture_id)
+        lecture.start_time = start_time
+        lecture.end_time = end_time
+        lecture.save()
+
+        return HttpResponse(status=200)
 
 
 @csrf_exempt

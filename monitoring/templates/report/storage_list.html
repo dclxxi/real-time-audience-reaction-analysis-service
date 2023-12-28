@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>청중을 구해조</title>
+    <!-- 파비콘 -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+    <!-- Font Awesome 아이콘 (무료 버전) -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <!-- 핵심 테마 CSS (부트스트랩 포함) -->
+    <link href="../../static/css/storage-list.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <style>
+        @media (min-width: 768px) {
+            /* md 사이즈 이상일 때 */
+            .custom-border {
+                border-right: dotted;
+                border-bottom: none;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            /* md 사이즈 미만일 때 */
+            .custom-border {
+                border-right: none;
+                border-bottom: dotted;
+            }
+        }
+    </style>
+
+
+</head>
+<body>
+
+
+<header class="mb-auto p-5">
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav"
+         style="background-color: #5a9e93 !important;">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">청중을 구해조</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                         href="#portfolio">소개</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">청중
+                        분석</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">분석
+                        저장소</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">LOGIN</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<section class="notice">
+    <div class="page-title">
+        <div class="container">
+            <h3 style="font-weight:700; color:">강의 기록</h3>
+        </div>
+    </div>
+
+    <!-- board seach area -->
+    <div id="board-search">
+        <div class="container">
+            <div class="search-window">
+                <form action="">
+                    <div class="search-wrap">
+                        <label for="search" class="blind">강의 내용 검색</label>
+                        <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="">
+                        <button type="submit" class="btn btn-dark"
+                                style="--bs-btn-border-color: #5a9e93; --bs-btn-bg: #5a9e93">검색
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- board list area -->
+    <div id="board-list">
+        <div class="container">
+            <table class="board-table">
+                <thead>
+                <tr>
+                    <th scope="col" class="th-num">번호</th>
+                    <th scope="col" class="th-title">제목</th>
+                    <th scope="col" class="th-date">등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>3</td>
+                    <th>
+                        <a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a>
+                        <p>테스트</p>
+                    </th>
+                    <td>2017.07.13</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
+                    <td>2017.06.15</td>
+                </tr>
+
+                <tr>
+                    <td>1</td>
+                    <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
+                    <td>2017.06.15</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+<!-- Footer Section -->
+<footer class="mb-auto" style="position: absolute; right: 0; left: 0; bottom: 0;">
+    <div class="copyright py-1 text-center text-white footer-bot">
+        <div class="container"><small>Copyright &copy; 청중을 구해조</small></div>
+    </div>
+</footer>
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+
+</body>
+</html>

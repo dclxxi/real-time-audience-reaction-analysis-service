@@ -2,7 +2,9 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
 
 from live.models import Lecture
 from report.models import Reaction, Feedback
@@ -21,7 +23,7 @@ def result(request, id):
             'reaction_feedbacks': reaction_feedbacks,
         }
 
-        return render(request, 'result.html', context)
+        return render(request, 'report/report_page.html', context)
 
     if request.method == 'POST':
         pass
@@ -46,7 +48,19 @@ def list(request):
             'lectures': page_obj,
         }
 
-        return render(request, 'lecture_list.html', context)
+        return render(request, 'report/storage_list.html', context)
 
     if request.method == 'POST':
         pass
+
+
+@csrf_exempt
+def delete_lecture(request):
+    if request.method == "GET":
+        pass
+
+    if request.method == "POST":
+        lecture_id = request.POST.get("lecture_id", None)
+        lecture = Lecture.objects.get(id=lecture_id)
+        lecture.delete()
+        return HttpResponse("delete complete")
