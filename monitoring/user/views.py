@@ -89,7 +89,7 @@ def signup_view(request):
         user.email = email
         user.save()
 
-        return render(request, "user/login_page.html")
+        return redirect("user:login")
 
     return render(request, "user/sign_up.html")
 
@@ -126,4 +126,4 @@ def login_view(request):
 @csrf_exempt
 def logout_view(request):
     logout(request)
-    return HttpResponse("logout successful")
+    return redirect('/')
