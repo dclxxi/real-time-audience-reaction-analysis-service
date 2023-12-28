@@ -1,21 +1,8 @@
 {% extends 'index.html' %}
 {% load static %}
-
 {% block content %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>문서</title>
-    <!-- 파비콘 -->
-    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}"/>
-    <!-- Font Awesome 아이콘 (무료 버전) -->
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <!-- 구글 폰트 -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
-          type="text/css"/>
     <!-- 핵심 테마 CSS (부트스트랩 포함) -->
-    <link href="{% static 'css/analysis-page.css' %}" rel="stylesheet"/>
-
+    <link href="{% static 'css/analysis-page.css' %}" rel="stylesheet">
     <style>
         @media (min-width: 768px) {
             /* md 사이즈 이상일 때 */
@@ -33,148 +20,40 @@
             }
         }
     </style>
-
     </head>
-    <body>
     <main class="mb-auto p-5">
         <section style="color: #73C5B7">
             <main class="p-3 contents-center container" style="height: 100%; border: dashed; border-radius: 0.5rem;">
                 <h2 class="page-section-heading text-center text-uppercase mb-0" style="">실시간 분석 중</h2>
                 <div class="row">
                     <div class="col-md-6 p-3 analysis-card border-md-end custom-border">
-                        <title>이미지 매개변수로 보내는 테스트</title>
-                        </head>
-                        <body>
                         <div>
-                            <video id="video" width="100%" height="50%" autoplay></video>
+                            <span id="elapsed-time">00:00:00</span><br>
+                            <span>{{ term }}초 간격으로 피드백</span>
+                            <video autoplay muted id="preview" width="100%" height="50%"></video>
                             <br>
                             <div class="button-center">
+                                <div id="id" data-id="{{ id }}"></div>
+                                <div id="term" data-term="{{ term }}"></div>
                                 <div>
-                                    <button class="record-button btn btn-primary btn-lg">강의시작</button>
+                                    <button id="record-button" class="record-button btn btn-primary btn-lg">강의시작
+                                    </button>
                                 </div>
                                 <div>
-                                    <button class="stop-button btn btn-primary btn-lg pause-button">일시정지</button>
+                                    <button id="stop-button" class="stop-button btn btn-primary btn-lg pause-button">
+                                        일시정지
+                                    </button>
                                 </div>
                             </div>
                         </div>
-
-                        <script>
-                            const video = document.getElementById('video');
-                            const canvas = document.createElement('canvas');
-                            const context = canvas.getContext('2d');
-
-                            navigator.mediaDevices.getUserMedia({video: true})
-                                .then(stream => {
-                                    video.srcObject = stream;
-                                });
-                        </script>
                     </div> <!--분석차트1-->
                     <div class="col-md-6 p-3 analysis-card" style="border-radius: 0.6rem;">긍정부정이모티콘 나올 곳</div>
                     <!--분석차트2-->
                 </div>
             </main>
         </section>
-        <!-- Portfolio Modal 1-->
-        <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" aria-labelledby="portfolioModal1"
-             aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center pb-5">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0">청중 분석 서비스</h2>
-                                    <br><br>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/cabin.png" alt="..."/>
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-4">청중 반응 분석 서비스는 강연 및 PT에 대한 설문 과정을 생략하여</p>
-                                    <p class="mb-4">사용자와 청중 사이에서 기존의 피드백 시스템 보다 더 편리한</p>
-                                    <p class="mb-4">피드백 시스템을 제공하기 위해 제작되었습니다.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 2-->
-        <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" aria-labelledby="portfolioModal2"
-             aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center pb-5">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0">서비스 기술 소개</h2>
-                                    <br><br>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/cake.png" alt="..."/>
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia
-                                        neque
-                                        assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam
-                                        velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque.
-                                        Nam.</p>
-                                    <button class="btn btn-primary" data-bs-dismiss="modal">
-                                        <i class="fas fa-xmark fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 3-->
-        <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" aria-labelledby="portfolioModal3"
-             aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center pb-5">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0">서비스 활용 방법</h2>
-                                    <br><br>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/circus.png"
-                                         alt="..."/>
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia
-                                        neque
-                                        assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam
-                                        velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque.
-                                        Nam.</p>
-                                    <button class="btn btn-primary" data-bs-dismiss="modal">
-                                        <i class="fas fa-xmark fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </main>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/record.js' %}"></script>
     <script src="{% static 'js/navbar_current_page_underline_effect.js' %}"></script>
 {% endblock %}
