@@ -100,6 +100,21 @@ def get_capture_file(request):
 
 
 @csrf_exempt
+def time(request):
+    if request.method == "POST":
+        lecture_id = request.POST.get('lecture_id')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+
+        lecture = get_object_or_404(Lecture, pk=lecture_id)
+        lecture.start_time = start_time
+        lecture.end_time = end_time
+        lecture.save()
+
+        return HttpResponse(status=200)
+
+
+@csrf_exempt
 def get_video_file(request):
     if request.method == "POST" and "video" in request.FILES and "image" in request.FILES:
         lecture_id = request.POST.get('lecture_id')

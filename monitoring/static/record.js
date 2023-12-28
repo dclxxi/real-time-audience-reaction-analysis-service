@@ -72,6 +72,7 @@ function stopRecording() {
     previewPlayer.srcObject.getTracks().forEach(track => track.stop());
 
     clearInterval(captureIntervalId);
+    sendTime(Date.now()).catch(error => console.error(error));
 }
 
 function playRecording() {
@@ -83,6 +84,37 @@ function playRecording() {
     console.log(recordingPlayer.src);
 
     // sendFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
+}
+
+async function sendTime(endTime) {
+    const formData = new FormData();
+    formData.append('lecture_id', lecture_id);
+    formData.append('start_time', toTimeString(startTime));
+    formData.append('end_time', toTimeString(endTime));
+
+    $.ajax({
+        url: '/live/time/',
+        data: formData,
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            location.href = '/report/result/' + lecture_id + '/';
+            console.log('성공');
+        },
+        error: function (request, status, error) {
+            console.log('에러');
+            console.log(request);
+            console.log(status);
+            console.log(error);
+        }
+    })
+}
+
+function toTimeString(timestamp) {
+    const date = new Date(timestamp);
+
+    return date.toISOString().split('T')[1].split('.')[0];
 }
 
 async function sendFile(image, video) {
