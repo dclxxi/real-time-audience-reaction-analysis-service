@@ -1,5 +1,5 @@
-const recordButton = document.querySelector(".record-button");
-const stopButton = document.querySelector(".stop-button");
+const recordButton = document.querySelector("#record-button");
+const stopButton = document.querySelector("#stop-button");
 const playButton = document.querySelector(".play-button");
 const downloadButton = document.querySelector(".video-download-button");
 const imgDownloadButton = document.querySelector(".img-download-button");
@@ -26,6 +26,7 @@ function updateElapsedTime() {
 }
 
 function videoStart() {
+     console.log('시작')
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
         previewPlayer.srcObject = stream;
         startRecording(previewPlayer.captureStream())
@@ -69,6 +70,7 @@ function startRecording(stream) {
 }
 
 function stopRecording() {
+    alert('중지!')
     previewPlayer.srcObject.getTracks().forEach(track => track.stop());
 
     clearInterval(captureIntervalId);
@@ -118,6 +120,7 @@ function toTimeString(timestamp) {
 }
 
 async function sendFile(image, video) {
+    console.log('센드파일')
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
     formData.append('time', time);
