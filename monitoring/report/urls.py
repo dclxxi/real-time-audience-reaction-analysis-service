@@ -6,5 +6,6 @@ app_name = 'report'
 
 urlpatterns = [
     path("list/", views.list),
-    path("result/<int:id>/", views.result),
+    path("result/<int:id>/", views.result, name="detail"),
+    path("list/delete/", views.delete_lecture),
 ]
