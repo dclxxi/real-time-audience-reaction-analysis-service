@@ -1,52 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>청중의소리를부탁해</title>
-    <!-- 파비콘 -->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
-    <!-- Font Awesome 아이콘 (무료 버전) -->
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <!-- 구글 폰트 -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
-          type="text/css"/>
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
     <!-- 핵심 테마 CSS (부트스트랩 포함) -->
-    <link href="../../static/css/report-page.css" rel="stylesheet"/>
+    <link href="{% static 'css/report-page.css' %}" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="icon" href="../../static/img/favicon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
 </head>
 <body>
-<header class="mb-auto p-5">
-    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav"
-         style="background-color:#5a9e93 !important;">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">청중을 구해조</a>
-            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                Menu
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="../main.html">소개</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="../live/analysis_page.html">청중 분석</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="report_page.html">분석 저장소</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                                                         href="../user/login_page.html">LOGOUT</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
 <main>
     <div class="mb-auto p-5 container contents-center">
         <section class="section-1" style="width: 100%">
@@ -63,36 +26,35 @@
                     <p>10h 20m</p>
                 </div>
                 <div class="lecture-left">
-                    <h4>피드백</h4>
+                    <h4>집중력 저하 구간</h4>
                     <p> 일부 청중의 집중력이 OOO파트에서 저하되었습니다.</p>
                 </div>
             </div>
         </section>
-        <hr>
+
+        <hr style="width: 100%">
 
         <div class="chart-content row contents-center">
             <div class="col-12 col-lg-6">
                 <canvas id="chart-left"></canvas>
-                <script src="../../static/js/report-chart-left.js"></script>
+                <script src="{% static  'js/report-chart-left.js' %}"></script>
             </div>
             <div class="col-12 col-lg-6">
                 <canvas id="chart-right"></canvas>
-                <script src="../../static/js/report-chart-right.js"></script>
+                <script src="{% static 'js/report-chart-right.js' %}"></script>
             </div>
         </div>
+
+        <hr style="width: 100%">
+
+        <section class="overall-feedback">
+            <h4>총 피드백</h4>
+            <p> 일부 청중의 집중력이 OOO파트에서 저하되었습니다.</p>
+        </section>
+
+    </div>
     </div>
 </main>
-<!-- Footer Section -->
-<footer class="mb-auto">
-    <div class="copyright py-1 text-center text-white footer-bot">
-        <div class="container"><small>Copyright &copy; 청중을 구해조</small></div>
-    </div>
-</footer>
+<script src="{% static 'js/navbar_current_page_underline_effect.js' %}"></script>
+{% endblock %}
 
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
-<!-- Core theme JS-->
-<script src="../../static/js/scripts.js"></script>
-<script src="../../static/js/navbar_current_page_underline_effect.js"></script>
-</body>
-</html>
