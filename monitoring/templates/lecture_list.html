@@ -3,6 +3,8 @@
 <html>
 <head>
     <title>강의 분석 결과</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 </head>
 <body>
 <h1>강의 분석 결과</h1>
@@ -15,10 +17,14 @@
         <input type="submit" value="Search">
     </form>
 </div>
+<div>{{ lectures.paginator.count }}</div>
 <ul>
     {% for lecture in lectures %}
         <li>
-            <p>{{ forloop.counter0|add:lectures.start_index }} {{ lecture.topic }} - {{ lecture.datetime }}</p>
+            <a href="{% url 'report:detail' lecture.id %}">{{ forloop.counter0|add:lectures.start_index }} {{ lecture.topic }}
+                - {{ lecture.datetime }}</a>
+            <button class='delete' lecture_id={{ lecture.id }}>삭제</button>
+
         </li>
     {% empty %}
         <li>강의가 없습니다</li>
@@ -58,5 +64,32 @@
             this.form.submit();
         };
     };
+
+    $('.delete').click(function (e) {
+        var ans = confirm('정말로 삭제하시겠습니까?');
+        let lecture_id = e.target.attributes.getNamedItem('lecture_id').value;
+        if (ans) {
+            $.ajax({
+                url: '/report/list/delete/',
+                data: {
+                    lecture_id: lecture_id
+                },
+                method: 'POST',
+                success: function (result) {
+                    console.log('성공')
+                    location.replace('/report/list');
+                },
+                error: function (result, status, error) {
+                    console.log('에러')
+                    console.log(result);
+                    console.log(status);
+                    console.log(error);
+                }
+
+            });
+        }
+
+
+    })
 </script>
 </html>
