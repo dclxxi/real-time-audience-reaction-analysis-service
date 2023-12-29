@@ -29,7 +29,7 @@ header h2 {
 }
 
 .user-inputs {
-    width: 27%;
+    width: 23%;
     padding: 30px;
     margin: auto;
 }
@@ -52,7 +52,14 @@ input {
     padding: 10px;
 }
 
+.btns {
+    margin-top: 10%;
+    text-align: center;
+}
+
 .btn {
+    display: inline-block;
+    margin: 0 5px;
     background-color: white;
     color: #73C5B7;
     padding: 10px 15px;
@@ -65,13 +72,15 @@ input {
     transition: all 0.3s ease;
 }
 
-.btn-register {
-    float: right;
+.btn-register, .btn-cancel {
+    float: none;
+    color: #03806b;
 }
 
 .btn-cancel {
     background-color: grey;
     color: #333;
+    font-style: #fff;
 }
 
 .img {
@@ -118,3 +127,31 @@ button:hover {
     transform: translateY(2px);
 }
 
+#passwordError {
+    color: red;
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#passwordConfirmError {
+    color: red;
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.username-check {
+    display: inline-block;
+    cursor: pointer;
+    color: #73C5B7;
+    font-weight: bold;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.username-check:hover {
+    background-color: 73C5B7;
+    border: none;
+}
