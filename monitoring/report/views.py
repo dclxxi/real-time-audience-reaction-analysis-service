@@ -40,11 +40,14 @@ def result(request, id):
 
 
 def elapsed_time(start_time, end_time):
-    start_time = datetime.combine(datetime.today(), start_time)
-    end_time = datetime.combine(datetime.today(), end_time)
-    elapsed_time = end_time - start_time
+    if start_time and end_time:
+        start_time = datetime.combine(datetime.today(), start_time)
+        end_time = datetime.combine(datetime.today(), end_time)
+        elapsed_time = end_time - start_time
 
-    return round(elapsed_time.total_seconds() / 60, 2)
+        return round(elapsed_time.total_seconds() / 60, 2)
+
+    return 0
 
 
 @login_required
