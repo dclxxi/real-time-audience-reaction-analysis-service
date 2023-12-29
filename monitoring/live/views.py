@@ -37,7 +37,7 @@ openai = OpenAI(api_key="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")  
 @login_required
 def info(request):
     if request.method == "GET":
-        return render(request, "info.html")
+        return render(request, "live/lecture_preset.html")
 
     if request.method == "POST":
         topic = request.POST.get("topic")
