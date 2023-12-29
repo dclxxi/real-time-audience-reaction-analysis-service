@@ -20,36 +20,40 @@
             }
         }
     </style>
-</head>
-<main class="mb-auto p-5">
-    <section style="color: #73C5B7">
-        <main class="p-3 contents-center container" style="height: 100%; border: dashed; border-radius: 0.5rem;">
-            <h2 class="page-section-heading text-center text-uppercase mb-0" style="">실시간 분석 중</h2>
-            <div class="row">
-                <div class="col-md-6 p-3 analysis-card border-md-end custom-border">
-                    <title>이미지 매개변수로 보내는 테스트</title>
-                    <div>
-                        <video autoplay muted id="preview" width="100%" height="50%"></video>
-                        <br>
-                        <div class="button-center">
+    </head>
+    <main class="mb-auto p-5">
+        <section style="color: #73C5B7">
+            <main class="p-3 contents-center container" style="height: 100%; border: dashed; border-radius: 0.5rem;">
+                <h2 class="page-section-heading text-center text-uppercase mb-0" style="">실시간 분석 중</h2>
+                <div class="row">
+                    <div class="col-md-6 p-3 analysis-card border-md-end custom-border">
+                        <div>
+                            <span id="elapsed-time">00:00:00</span><br>
                             <span>{{ term }}초 간격으로 피드백</span>
-                            <div id="id" data-id="{{ id }}"></div>
-                            <div id="term" data-term="{{ term }}"></div>
-                            <div>
-                                <button id="record-button" class="record-button btn btn-primary btn-lg">강의시작</button>
-                            </div>
-                            <div>
-                                <button id="stop-button" class="stop-button btn btn-primary btn-lg pause-button">일시정지</button>
+                            <video autoplay muted id="preview" width="100%" height="50%"></video>
+                            <br>
+                            <div class="button-center">
+                                <div id="id" data-id="{{ id }}"></div>
+                                <div id="term" data-term="{{ term }}"></div>
+                                <div>
+                                    <button id="record-button" class="record-button btn btn-primary btn-lg">강의시작
+                                    </button>
+                                </div>
+                                <div>
+                                    <button id="stop-button" class="stop-button btn btn-primary btn-lg pause-button">
+                                        일시정지
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div> <!--분석차트1-->
-                <div class="col-md-6 p-3 analysis-card" style="border-radius: 0.6rem;">긍정부정이모티콘 나올 곳</div> <!--분석차트2-->
-            </div>
-        </main>
-    </section>
-</main>
-<!-- Core theme JS-->
-<script src="{% static 'js/record.js' %}"></script>
-<script src="{% static 'js/navbar_current_page_underline_effect.js' %}"></script>
+                    </div> <!--분석차트1-->
+                    <div class="col-md-6 p-3 analysis-card" style="border-radius: 0.6rem;">긍정부정이모티콘 나올 곳</div>
+                    <!--분석차트2-->
+                </div>
+            </main>
+        </section>
+    </main>
+    <!-- Core theme JS-->
+    <script src="{% static 'js/record.js' %}"></script>
+    <script src="{% static 'js/navbar_current_page_underline_effect.js' %}"></script>
 {% endblock %}

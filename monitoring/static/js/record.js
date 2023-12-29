@@ -1,11 +1,6 @@
 const recordButton = document.querySelector("#record-button");
 const stopButton = document.querySelector("#stop-button");
-const playButton = document.querySelector(".play-button");
-const downloadButton = document.querySelector(".video-download-button");
-const imgDownloadButton = document.querySelector(".img-download-button");
-const captureButton = document.querySelector(".capture-button");
 const previewPlayer = document.querySelector("#preview");
-const recordingPlayer = document.querySelector("#recording");
 
 let recorder;
 let recordedChunks;
@@ -26,7 +21,7 @@ function updateElapsedTime() {
 }
 
 function videoStart() {
-     console.log('시작')
+    console.log('시작')
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
         previewPlayer.srcObject = stream;
         startRecording(previewPlayer.captureStream())
@@ -155,5 +150,3 @@ async function sendFile(image, video) {
 
 recordButton.addEventListener("click", videoStart);
 stopButton.addEventListener("click", stopRecording);
-playButton.addEventListener("click", playRecording);
-captureButton.addEventListener("click", recording);
