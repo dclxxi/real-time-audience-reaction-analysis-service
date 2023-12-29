@@ -35,11 +35,9 @@
             <div class="chart-content row contents-center">
                 <div class="col-12 col-lg-6">
                     <canvas id="chart-left"></canvas>
-                    <script src="{% static  'js/report-chart-left.js' %}"></script>
                 </div>
                 <div class="col-12 col-lg-6">
                     <canvas id="chart-right"></canvas>
-                    <script src="{% static 'js/report-chart-right.js' %}"></script>
                 </div>
             </div>
 
@@ -52,6 +50,11 @@
 
         </div>
     </main>
+    <script type="text/javascript">
+        const reactions = JSON.parse('{{ reactions_json|safe }}');
+    </script>
+
+    <script src="{% static 'js/report-chart.js' %}"></script>
     <script src="{% static 'js/navbar_current_page_underline_effect.js' %}"></script>
 {% endblock %}
 

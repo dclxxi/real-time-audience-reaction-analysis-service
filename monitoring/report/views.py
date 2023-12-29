@@ -1,13 +1,15 @@
 # Create your views here.
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.core.serializers import serialize
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 
 from live.models import Lecture
-from report.models import Reaction, Feedback
+from report.models import Reaction
 
 
 @login_required
@@ -15,12 +17,15 @@ def result(request, id):
     if request.method == 'GET':
         lecture = get_object_or_404(Lecture, pk=id)
 
-        reactions = Reaction.objects.filter(lecture=lecture)
-        reaction_feedbacks = [(reaction, Feedback.objects.filter(reaction=reaction).first()) for reaction in reactions]
+        # reactions_with_feedback = Reaction.objects.filter(lecture=lecture).select_related('feedback').order_by('time')
+
+        reactions = Reaction.objects.filter(lecture=lecture).order_by('time')
+        reactions_json = serialize('json', reactions,
+                                   fields=('time', 'concentration', 'negative', 'neutral', 'positive'))
 
         context = {
             'lecture': lecture,
-            'reaction_feedbacks': reaction_feedbacks,
+            'reactions_json': reactions_json,
         }
 
         return render(request, 'report/report_page.html', context)
