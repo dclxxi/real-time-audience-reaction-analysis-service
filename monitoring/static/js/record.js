@@ -8,6 +8,7 @@ let captureIntervalId;
 let startTime;
 let elapsedTimeIntervalId;
 let time;
+let elapsed_time = document.getElementById('elapsed-time');
 let lecture_id = document.getElementById("id").dataset.id;
 let term = parseInt(document.getElementById("term").dataset.term);
 
@@ -17,7 +18,7 @@ function updateElapsedTime() {
     const hours = Math.floor(elapsedTime / 3600000);
     const minutes = Math.floor((elapsedTime % 3600000) / 60000);
     const seconds = Math.floor((elapsedTime % 60000) / 1000);
-    document.getElementById('elapsed-time').textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    elapsed_time.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function videoStart() {
@@ -27,7 +28,7 @@ function videoStart() {
         startRecording(previewPlayer.captureStream())
     })
 
-    captureIntervalId = setInterval(recording, 1000 * term);
+    captureIntervalId = setInterval(recording, 60000 * term);
     startTime = Date.now();
     elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
 
@@ -69,21 +70,12 @@ function stopRecording() {
     previewPlayer.srcObject.getTracks().forEach(track => track.stop());
 
     clearInterval(captureIntervalId);
+    clearInterval(elapsedTimeIntervalId);
+
     sendTime(Date.now()).catch(error => console.error(error));
 }
 
-function playRecording() {
-    const recordedBlob = new Blob(recordedChunks, {type: "video/webm"});
-    recordingPlayer.src = URL.createObjectURL(recordedBlob);
-    recordingPlayer.play();
-    downloadButton.href = recordingPlayer.src;
-    downloadButton.download = `recording_${new Date()}.webm`;
-    console.log(recordingPlayer.src);
-
-    // sendFile(recordedBlob).then(data => console.log(data)).catch(error => console.error(error));
-}
-
-async function sendTime(endTime) {
+async function sendTime(endTime, elapsedTime) {
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
     formData.append('start_time', toTimeString(startTime));

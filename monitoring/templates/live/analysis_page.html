@@ -28,10 +28,16 @@
                 <div class="row">
                     <div class="col-md-6 p-3 analysis-card border-md-end custom-border">
                         <div>
-                            <span id="elapsed-time">00:00:00</span><br>
-                            <span>{{ term }}초 간격으로 피드백</span>
+                            <div id="timer-container">
+                                <span>{{ term }}분 간격으로 피드백</span>
+                            </div>
                             <video autoplay muted id="preview" width="100%" height="50%"></video>
                             <br>
+                            <div id="timer-container">
+                                <div id="timer">
+                                    <span id="elapsed-time">00:00:00</span><br>
+                                </div>
+                            </div>
                             <div class="button-center">
                                 <div id="id" data-id="{{ id }}"></div>
                                 <div id="term" data-term="{{ term }}"></div>

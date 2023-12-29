@@ -12710,3 +12710,10 @@ nav > div > div > ul > li > a {
     left: 0;
     bottom: 5px;
 }
+
+#timer-container {
+    font-size: 30px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+}
