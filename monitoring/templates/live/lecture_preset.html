@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label for="lectureNmae" class="form-label">강의 제목</label>
                                 <input type="text" class="form-control" id="lectureName" name="topic"
-                                       placeholder="강의 제목 입력하세요">
+                                       placeholder="강의 제목을 입력하세요">
                             </div>
                             <div>
                                 <label for="timeInterval" class="form-label">피드백 간격 설정</label>
@@ -45,7 +45,6 @@
                                     <option value="15">15분</option>
                                 </select>
                                 <div class="mt-3" style="text-align: center;">
-
                                     <button class="btn" type="submit"
                                             style="background-color: #73C5B7; color: white; width: 100%;">설정완료
                                     </button>
@@ -63,10 +62,10 @@
 
             if (lectureName.trim() === '') {
                 alert('강의 제목을 입력하세요.');
-                return false; // 제출 막기
+                return false;
             }
 
-            return true; // 제출 막기
+            return true;
         }
     </script>
     <script src="{% static 'js/scripts.js' %}"></script>
