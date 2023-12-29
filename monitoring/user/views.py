@@ -5,7 +5,6 @@ from uuid import uuid4
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
@@ -103,6 +102,7 @@ def login_view(request):
     if request.method == "POST":
         userid = request.POST.get("userid")
         password = request.POST.get("password")
+        remember_me = request.POST.get('remember_me')
         next_url = request.POST.get("next") or "/"
 
         try:
@@ -114,6 +114,11 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+
+            if remember_me is not None:
+                request.session.set_expiry(3600 * 24 * 30)  # 30일 동안 유효한 세션
+            else:
+                request.session.set_expiry(0)
 
             if next_url.startswith("/live/record/"):
                 return redirect("live:info")

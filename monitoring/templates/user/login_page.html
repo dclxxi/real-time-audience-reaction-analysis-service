@@ -1,8 +1,7 @@
+{% load static %}
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 <head>
-    <script src="/docs/5.3/assets/js/color-modes.js"></script>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -11,7 +10,7 @@
     <title>청중의소리를부탁해</title>
     <link rel="canonical" href="https://getbootstrap.kr/docs/5.3/examples/sign-in/">
     <link href="../../static/css/login-page.css" rel="stylesheet">
-    <link rel="icon" href="../../static/img/favicon.png">
+    <link rel="icon" href="../../static/img/favicon.ico">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -23,10 +22,13 @@
 
 <main class="form-signin w-100 m-auto">
     <form method="post" id="login_form" name="login_form">
-        <img src="../../static/img/introduction-page-img/logo2.png"><br><br>
+        <a class="navbar-brand">
+            <img src="{% static 'img/introduction-page-img/logo2.png' %}"><br><br>
+        </a>
 
         <div class="form-floating">
-            <input type="text" class="form-control" id="id" name="userid" placeholder="ID를 입력하세요.">
+            <input type="text" class="form-control" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;"
+                   id="id" name="userid" placeholder="ID를 입력하세요.">
             <label for="floatingInput">ID</label>
         </div>
         <div class="form-floating">
@@ -35,7 +37,7 @@
         </div>
 
         <div class="form-check text-start my-3">
-            <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="remember_me">
             <label class="form-check-label" for="flexCheckDefault" style="color:#fff !important;">
                 Remember me
             </label>
@@ -44,8 +46,12 @@
         <input type="hidden" name="next" value="{{ next }}">
         <button class="btn btn-primary w-100 py-2" type="submit" id="login_btn">로그인</button>
     </form>
+    <div class="text-center pt-2">계정이 없으신가요?<a class="text-center sign-up-button" href="{% url 'user:signup' %}">
+        회원가입</a></div>
     <p>{{ error }}</p>
 </main>
-<script src="../../static/js/login-page-alert.js"></script>
+
+
+<script src="{% static 'js/login-page-alert.js' %}"></script>
 </body>
 </html>
