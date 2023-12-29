@@ -29,10 +29,10 @@
                             <h5>청중을 구해조</h5>
                             <h1>강의자 정보 입력</h1>
                         </div>
-                        <form method="post">
+                        <form method="post" class="lecture-form" onsubmit="return submitForm()">
                             <div class="mb-3">
                                 <label for="lectureNmae" class="form-label">강의 제목</label>
-                                <input type="text" class="form-control" id="topic" name="topic"
+                                <input type="text" class="form-control" id="lectureName" name="topic"
                                        placeholder="강의 제목 입력하세요">
                             </div>
                             <div>
@@ -57,6 +57,18 @@
             </main>
         </section>
     </main>
+    <script>
+        function submitForm() {
+            var lectureName = document.getElementById('lectureName').value;
+
+            if (lectureName.trim() === '') {
+                alert('강의 제목을 입력하세요.');
+                return false; // 제출 막기
+            }
+
+            return true; // 제출 막기
+        }
+    </script>
     <script src="{% static 'js/scripts.js' %}"></script>
     <script src="{% static 'js/navbar_current_page_underline_effect.js' %}"></script>
 {% endblock %}
