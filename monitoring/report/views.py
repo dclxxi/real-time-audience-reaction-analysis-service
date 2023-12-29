@@ -1,4 +1,5 @@
 # Create your views here.
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -23,8 +24,12 @@ def result(request, id):
         reactions_json = serialize('json', reactions,
                                    fields=('time', 'concentration', 'negative', 'neutral', 'positive'))
 
+        time_diff = elapsed_time(lecture.start_time, lecture.end_time)
+        print(time_diff)
+
         context = {
             'lecture': lecture,
+            'time_diff': time_diff,
             'reactions_json': reactions_json,
         }
 
@@ -32,6 +37,14 @@ def result(request, id):
 
     if request.method == 'POST':
         pass
+
+
+def elapsed_time(start_time, end_time):
+    start_time = datetime.combine(datetime.today(), start_time)
+    end_time = datetime.combine(datetime.today(), end_time)
+    elapsed_time = end_time - start_time
+
+    return round(elapsed_time.total_seconds() / 60, 2)
 
 
 @login_required
