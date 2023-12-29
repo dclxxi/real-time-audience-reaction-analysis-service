@@ -4,7 +4,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.serializers import serialize
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
@@ -18,19 +18,20 @@ def result(request, id):
     if request.method == 'GET':
         lecture = get_object_or_404(Lecture, pk=id)
 
-        # reactions_with_feedback = Reaction.objects.filter(lecture=lecture).select_related('feedback').order_by('time')
-
         reactions = Reaction.objects.filter(lecture=lecture).order_by('time')
         reactions_json = serialize('json', reactions,
                                    fields=('time', 'concentration', 'negative', 'neutral', 'positive'))
 
-        time_diff = elapsed_time(lecture.start_time, lecture.end_time)
-        print(time_diff)
+        feedbacks = [reaction.feedback.content for reaction in reactions if reaction.feedback is not None]
+
+        max_time = reactions.aggregate(Max('time'))['time__max']
+        time_diff = max_time if max_time else elapsed_time(lecture.start_time, lecture.end_time)
 
         context = {
             'lecture': lecture,
-            'time_diff': time_diff,
+            'feedbacks': feedbacks,
             'reactions_json': reactions_json,
+            'time_diff': time_diff,
         }
 
         return render(request, 'report/report_page.html', context)
