@@ -78,13 +78,25 @@ WSGI_APPLICATION = "monitoring.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "HOST": env("MYSQL_HOST"),
+#         "NAME": env("MYSQL_DB_NAME"),
+#         "USER": env("MYSQL_USER_NAME"),
+#         "PASSWORD": env("MYSQL_PASSWORD"),
+#         "PORT": "3306",
+#         "OPTIONS": {"charset": "utf8mb4"},
+#     }
+# }
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "HOST": env("MYSQL_HOST"),
-        "NAME": env("MYSQL_DB_NAME"),
-        "USER": env("MYSQL_USER_NAME"),
-        "PASSWORD": env("MYSQL_PASSWORD"),
+        "HOST": os.environ.get("MYSQL_HOST", "localhost"),
+        "NAME": os.environ.get("MYSQL_DB_NAME"),
+        "USER": os.environ.get("MYSQL_USER_NAME"),
+        "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
         "PORT": "3306",
         "OPTIONS": {"charset": "utf8mb4"},
     }
