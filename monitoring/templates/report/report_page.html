@@ -18,14 +18,12 @@
                         <p>{{ lecture.topic }}</p>
                         <h4>강의자</h4>
                         <p>{{ lecture.user.name }}</p>
+                    </div>
+                    <div class="lecture-left">
                         <h4>강의 일자</h4>
                         <p>{{ lecture.datetime|date:"Y.m.d" }}</p>
                         <h4>강의 시간</h4>
                         <p>{{ time_diff }}분</p>
-                    </div>
-                    <div class="lecture-left">
-                        <h4>집중력 저하 구간</h4>
-                        <p> 일부 청중의 집중력이 OOO파트에서 저하되었습니다.</p>
                     </div>
                 </div>
             </section>
@@ -44,8 +42,8 @@
             <hr style="width: 100%">
 
             <section class="overall-feedback">
-                <h4>총 피드백</h4>
-                <p> 일부 청중의 집중력이 OOO파트에서 저하되었습니다.</p>
+                <h4>피드백</h4>
+                <div id="feedback-display" style="white-space: pre-wrap;">그래프 위에 마우스를 올려 피드백을 확인하세요.</div>
             </section>
 
         </div>

@@ -1,7 +1,8 @@
 const chartData = {
     times: [],
     concentrations: [],
-    reactions: []
+    reactions: [],
+    feedbacks: [],
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -10,13 +11,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function processReactionsData(reactions) {
     reactions.forEach(function (reaction) {
-        chartData.times.push(reaction.fields.time);
-        chartData.concentrations.push(reaction.fields.concentration);
+        chartData.times.push(reaction.time);
+        chartData.concentrations.push(reaction.concentration);
         chartData.reactions.push({
-            positive: reaction.fields.positive,
-            neutral: reaction.fields.neutral,
-            negative: reaction.fields.negative
+            positive: reaction.positive,
+            neutral: reaction.neutral,
+            negative: reaction.negative
         });
+        chartData.feedbacks.push(reaction.feedback);
     });
 
     initLineChart();
@@ -64,7 +66,10 @@ function initLineChart() {
                 if (elements.length > 0) {
                     const index = elements[0].index;
                     const reaction = chartData.reactions[index];
+                    const feedback = chartData.feedbacks[index];
+
                     updateBarChart(reaction.positive, reaction.neutral, reaction.negative);
+                    document.getElementById('feedback-display').innerHTML = feedback.replace(/\\n/g, '<br>');
                 }
             },
         }

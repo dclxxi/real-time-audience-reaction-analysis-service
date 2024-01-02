@@ -1,9 +1,9 @@
 # Create your views here.
+import json
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.core.serializers import serialize
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -19,16 +19,27 @@ def result(request, id):
         lecture = get_object_or_404(Lecture, pk=id)
 
         reactions = Reaction.objects.filter(lecture=lecture).order_by('time')
-        reactions_json = serialize('json', reactions,
-                                   fields=('time', 'concentration', 'negative', 'neutral', 'positive'))
 
-        feedbacks = [reaction.feedback.content for reaction in reactions if reaction.feedback is not None]
+        reactions_with_feedbacks = []
+        for reaction in reactions:
+            feedback_content = reaction.feedback.content if reaction.feedback else '피드백이 없습니다.'
+            feedback_content_escaped = escape_control_characters(feedback_content)
+            reaction_dict = {
+                'time': reaction.time,
+                'concentration': reaction.concentration,
+                'negative': reaction.negative,
+                'neutral': reaction.neutral,
+                'positive': reaction.positive,
+                'feedback': feedback_content_escaped,
+            }
+            reactions_with_feedbacks.append(reaction_dict)
+
+        reactions_json = json.dumps(reactions_with_feedbacks, ensure_ascii=False)
 
         time_diff = elapsed_time(lecture.start_time, lecture.end_time)
 
         context = {
             'lecture': lecture,
-            'feedbacks': feedbacks,
             'reactions_json': reactions_json,
             'time_diff': time_diff,
         }
@@ -37,6 +48,16 @@ def result(request, id):
 
     if request.method == 'POST':
         pass
+
+
+def escape_control_characters(s):
+    return s.translate(str.maketrans({
+        '\b': '\\b',
+        '\f': '\\f',
+        '\n': '\\n',
+        '\r': '\\r',
+        '\t': '\\t',
+    }))
 
 
 def elapsed_time(start_time, end_time):
