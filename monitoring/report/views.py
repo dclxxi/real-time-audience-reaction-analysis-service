@@ -4,7 +4,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.serializers import serialize
-from django.db.models import Q, Max
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
@@ -24,8 +24,7 @@ def result(request, id):
 
         feedbacks = [reaction.feedback.content for reaction in reactions if reaction.feedback is not None]
 
-        max_time = reactions.aggregate(Max('time'))['time__max']
-        time_diff = max_time if max_time else elapsed_time(lecture.start_time, lecture.end_time)
+        time_diff = elapsed_time(lecture.start_time, lecture.end_time)
 
         context = {
             'lecture': lecture,
@@ -46,7 +45,7 @@ def elapsed_time(start_time, end_time):
         end_time = datetime.combine(datetime.today(), end_time)
         elapsed_time = end_time - start_time
 
-        return round(elapsed_time.total_seconds() / 60, 2)
+        return round(elapsed_time.total_seconds() / 60)
 
     return 0
 
