@@ -29,7 +29,7 @@ credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
 
 client = storage.Client(credentials=credentials, project=credentials.project_id)
 
-openai = OpenAI(api_key="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")  # 본인 API키로 수정해서 실행해주세요
+openai = OpenAI(api_key="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")  # 본인 API키로 수정해서 실행해주세요
 
 
 # Create your views here.
@@ -167,7 +167,7 @@ def get_video_file(request):
         audio_content = run_stt(upload_file_name)
         print('출력: ', audio_content)
 
-        # feedback_content = chatGPT(lecture.topic, audio_content)
+        # feedback_content = chatGPT(lecture.topic, audio_content, reaction)
         feedback_content = f"{lecture.topic} 주제의 피드백입니다."
 
         feedback = Feedback()
@@ -320,12 +320,21 @@ def run_stt(upload_file_name):
     return audio_content
 
 
-def chatGPT(topic, prompt):
-    content = f"강의 주제: {topic}\n강의 내용: {prompt}"
+def chatGPT(topic, prompt, reaction):
+    content = (f"강의 주제: {topic}\n"
+               f"청중 반응: 집중도 {reaction.concentration}%, 긍정 {reaction.positive}%, "
+               f"중립 {reaction.neutral}%, 부정 {reaction.negative}%\n"
+               f"강의 내용: {prompt}")
     completion = openai.chat.completions.create(model="gpt-3.5-turbo",
                                                 messages=[
                                                     {"role": "system", "content": "당신은 교육 전문가로서, 강의 내용에 대한 피드백을 "
-                                                                                  "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."},
+                                                                                  "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."
+                                                                                  "발음이나 억양, 속도 등의 음성적 특성에 대한 피드백은 제외하고, "
+                                                                                  "오로지 강의 내용과 청중의 반응에 초점을 맞춰주세요.\n"
+                                                                                  "[피드백 형식]\n"
+                                                                                  "강점: [한 줄로 강점을 기재해 주세요]\n"
+                                                                                  "약점: [한 줄로 약점을 기재해 주세요]\n"
+                                                                                  "개선 방법: [한 줄로 개선 방법을 기재해 주세요]"},
                                                     {"role": "user", "content": content}
                                                 ])
     print(completion)
