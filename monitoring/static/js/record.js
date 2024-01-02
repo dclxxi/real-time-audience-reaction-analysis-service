@@ -88,14 +88,22 @@ async function sendTime(endTime, elapsedTime) {
         processData: false,
         contentType: false,
         success: function (result) {
-            location.href = '/report/result/' + lecture_id + '/';
+            /*로딩화면*/
             console.log('성공');
+            $('#loading').show();
         },
         error: function (request, status, error) {
             console.log('에러');
             console.log(request);
             console.log(status);
             console.log(error);
+        },
+        complete: function () {
+            console.log('완료');
+            setTimeout(function () {
+                $('#loading').hide();
+                location.href = '/report/result/' + lecture_id + '/';
+            }, 30000);
         }
     })
 }
