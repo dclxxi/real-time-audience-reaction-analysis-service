@@ -88,10 +88,11 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
     </div>
     <div class="pagination">
     <span class="step-links destroy-box">
-    <a href="?page=1">처음</a>
         {% if lectures.has_previous %}
+            <a href="?page=1">처음</a>
             <a href="?page={{ lectures.previous_page_number }}">이전</a>
         {% else %}
+            <a aria-disabled="true">처음</a>
             <span class="disabled">이전</span>
         {% endif %}
 
@@ -105,10 +106,11 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
 
         {% if lectures.has_next %}
             <a href="?page={{ lectures.next_page_number }}">다음</a>
+            <a href="?page={{ lectures.paginator.num_pages }}">마지막</a>
         {% else %}
             <span class="disabled">다음</span>
+            <a aria-disabled="true">마지막</a>
         {% endif %}
-        <a href="?page={{ lectures.paginator.num_pages }}">마지막</a>
     </span>
     </div>
 </section>
