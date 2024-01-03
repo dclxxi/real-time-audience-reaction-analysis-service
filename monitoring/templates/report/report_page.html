@@ -1,9 +1,12 @@
 {% extends 'index.html' %}
 {% load static %}
 
-
-    <!-- 핵심 테마 CSS (부트스트랩 포함) -->
 {% block content %}
+    <!-- 핵심 테마 CSS (부트스트랩 포함) -->
+    <link href="{% static 'css/report-page.css' %}" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 <body>
     <main>
         <div class="mb-auto p-5 container contents-center">
