@@ -102,8 +102,11 @@ def login_view(request):
     if request.method == "POST":
         userid = request.POST.get("userid")
         password = request.POST.get("password")
-        remember_me = request.POST.get('remember_me')
+        remember_me = request.POST.get("remember_me")
         next_url = request.POST.get("next") or "/"
+
+        if userid == "" or password == "":
+            return render(request, "user/login_page.html")
 
         try:
             user = User.objects.get(userid=userid)
@@ -125,10 +128,12 @@ def login_view(request):
 
             return redirect(next_url)
         else:
-            return render(request, "user/login_page.html", {"error": "비밀번호가 올바르지 않습니다."})
+            return render(
+                request, "user/login_page.html", {"error": "비밀번호가 올바르지 않습니다."}
+            )
 
 
 @csrf_exempt
 def logout_view(request):
     logout(request)
-    return redirect('/')
+    return redirect("/")
