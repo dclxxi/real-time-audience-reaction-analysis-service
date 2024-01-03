@@ -28,7 +28,8 @@ function videoStart() {
         startRecording(previewPlayer.captureStream())
     })
 
-    captureIntervalId = setInterval(recording, 60000 * term);
+    // captureIntervalId = setInterval(recording, 60000 * term);
+    captureIntervalId = setInterval(recording, 10000);
     startTime = Date.now();
     elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
 
@@ -75,7 +76,7 @@ function stopRecording() {
     sendTime(Date.now()).catch(error => console.error(error));
 }
 
-async function sendTime(endTime, elapsedTime) {
+function sendTime(endTime, elapsedTime) {
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
     formData.append('start_time', toTimeString(startTime));
@@ -131,13 +132,21 @@ async function sendFile(image, video) {
         success: function (result) {
             console.log('성공');
             const data = $.parseJSON(result);
-            $('#reaction').empty()
-            $(data).each(function (i, val) {
-                $.each(val, function (k, v) {
-                    console.log(k + " : " + v);
-                    $('#reaction').append('<p>' + k + ' : ' + v + '</p>');
-                });
-            });
+            const emotion = $('#emotionImage');
+            $('#reaction').empty();
+            let audience_reaction = data['concentration'];
+            $('#concentrationTextElement').text(audience_reaction);
+            if(audience_reaction >= 50){
+                console.log('굿')
+                emotion.fadeIn();
+                emotion.attr("src", "/static/img/emotion/smile.png");
+                emotion.fadeOut(3000);
+            }else{
+                console.log('배드')
+                emotion.fadeIn();
+                emotion.attr("src", "/static/img/emotion/bad.png");
+                emotion.fadeOut(3000);
+            }
         },
         error: function (request, status, error) {
             console.log('에러');

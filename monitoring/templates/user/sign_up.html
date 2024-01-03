@@ -18,7 +18,7 @@
     <form method="post" enctype="multipart/form-data" action="{% url 'user:signup' %}">
         <div class="user-input-Privacy">
             <label>아이디</label>
-            <input type="text" placeholder="user_id" name="userid" required>
+            <input type="text" pattern="[A-Za-z0-9]{6,15}" title="아이디는 6~15자리의 영문자와 숫자로 이루어져야 합니다." placeholder="ID" name="userid" required>
         </div>
 
         <div class="user-input-Privacy">
@@ -52,7 +52,7 @@
 
         <div>
             <button class="btn btn-register" type="submit">회원가입</button>
-            <button class="btn btn-cancel" type="button" onclick="location.href='#'">취소</button>
+            <button class="btn btn-cancel" type="button" onclick="location.href='/'">취소</button>
         </div>
         <!-- <img src="../../static/img/sign-up-image.png" alt="sign-up-image" class="img"> -->
     </form>

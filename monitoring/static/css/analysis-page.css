@@ -11103,3 +11103,24 @@ nav > div > div > ul > li > a {
   margin: 20px 0;
   font-weight: bold;
 }
+
+.title-border {
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 6px;
+  border-color: rgba(233, 233, 233);
+}
+
+.border-wrapping {
+  border: solid;
+  border-radius: 0.6rem;
+  border-color: rgb(233,233,233)!important;
+  padding: 0.4rem;
+}
+
+.grid-sorting {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}

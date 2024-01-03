@@ -70,12 +70,12 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
                     <tr>
                         <td>{{ forloop.counter0|add:lectures.start_index }}</td>
                         <th>
-                            <a href="{% url 'report:detail' lecture.id %}">{{ lecture.topic }}</a>
+                            <a href="{% url 'report:detail' lecture.id %}" style="text-decoration: none" >{{ lecture.topic }}</a>
                             <p>테스트</p>
                         </th>
                         <td>{{ lecture.datetime|date:"Y.m.d" }}</td>
                         <td>
-                            <button class='delete' lecture_id={{ lecture.id }}>삭제</button>
+                            <button class='delete' lecture_id={{ lecture.id }}>삭제<i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 {% empty %}
@@ -87,7 +87,7 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
         </div>
     </div>
     <div class="pagination">
-    <span class="step-links">
+    <span class="step-links destroy-box">
     <a href="?page=1">처음</a>
         {% if lectures.has_previous %}
             <a href="?page={{ lectures.previous_page_number }}">이전</a>

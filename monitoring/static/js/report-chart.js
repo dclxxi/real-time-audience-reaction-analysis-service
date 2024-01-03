@@ -32,7 +32,7 @@ function initLineChart() {
         data: {
             labels: chartData.times,
             datasets: [{
-                label: '시간대 별 청중 반응 차트',
+                label: '시간대 별 청중 집중도',
                 data: chartData.concentrations,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -90,7 +90,7 @@ function initBarChart() {
         data: {
             labels: ["긍정", "중립", "부정"],
             datasets: [{
-                label: '시간대 별 청중 반응 차트',
+                label: '시간대 별 청중 반응',
                 data: [0, 0, 0],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
