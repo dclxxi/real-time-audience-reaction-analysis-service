@@ -27,12 +27,12 @@
         </a>
 
         <div class="form-floating">
-            <input type="text" class="form-control" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;"
-                   id="id" name="userid" required oninvalid="this.setCustomValidity('아이디를 입력하세요.')">
+            <input type="text" class="form-control" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0; box-shadow: none; border:1px solid lightgrey" placeholder=""
+                   id="id" name="userid" required>
             <label for="floatingInput">ID</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="pw" name="password" placeholder="Password" required oninvalid="this.setCustomValidity('비밀번호를 입력하세요.')">
+            <input style="box-shadow: none; border:1px solid lightgrey" type="password" class="form-control" id="pw" name="password" placeholder="" required>
             <label for="floatingPassword">Password</label>
         </div>
 
@@ -44,9 +44,9 @@
         </div>
 
         <input type="hidden" name="next" value="{{ next }}">
-        <button class="btn btn-primary w-100 py-2" type="submit" id="login_btn">로그인</button>
+        <button style= "background-color:#181934; border:none; font-weight: bold;" class="btn btn-primary w-100 py-2" type="submit" id="login_btn">로그인</button>
     </form>
-    <div class="text-center pt-2">계정이 없으신가요?<a class="text-center sign-up-button" href="{% url 'user:signup' %}">
+    <div class="text-center pt-2">계정이 없으신가요?<a style="color:white; " class="text-center sign-up-button" href="{% url 'user:signup' %}">
         회원가입</a></div>
     <p>{{ error }}</p>
 </main>
