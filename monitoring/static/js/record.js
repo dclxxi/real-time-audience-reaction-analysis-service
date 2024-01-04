@@ -37,18 +37,28 @@ function videoStart() {
 }
 
 function recording() {
-    recorder.stop();
-    recorder.onstop = () => {
+    if (recorder && recorder.state === "recording") {
+        recorder.stop();
+    }
+
+    recorder.onstop = async () => {
         const video = new Blob(recordedChunks, {type: "video/webm"});
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         context.drawImage(previewPlayer, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(async (image) => {
-            await sendFile(image, video).catch(error => console.error(error));
+            try {
+                await sendFile(image, video);
+            } catch (error) {
+                console.error(error);
+            }
         }, 'image/png');
 
         recordedChunks = [];
+    }
+
+    if (recorder && recorder.state === "inactive") {
         recorder.start();
     }
 
