@@ -78,6 +78,7 @@ function startRecording(stream) {
 
 function stopRecording() {
     alert('중지!')
+    recorder.stop();
     previewPlayer.srcObject.getTracks().forEach(track => track.stop());
 
     clearInterval(captureIntervalId);
