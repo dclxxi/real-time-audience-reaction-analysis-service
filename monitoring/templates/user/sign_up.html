@@ -13,6 +13,7 @@
 <header class="full-background-paper">
     <img style="width: 200px; height: 200px;" src="{% static 'img/introduction-page-img/logo.png' %}">
     <br><br><br>
+    <h2>회원가입</h2>
 </header>
 
 <div class="user-inputs" style="border: 1px solid #E6E6E6;">
@@ -28,15 +29,14 @@
             <div class="test-class">
                 <label>비밀번호</label>
                 <input type="password" id="password" placeholder="password" name="password" required
-                       onchange="isSame()">
+                        onchange="isSame()">
                 <i class="fa fa-eye" id="InputPassword"></i>
             </div>
         </div>
         <div class="user-input-Privacy">
             <div class="test-class">
                 <label>비밀번호 확인</label>
-                <input type="password" id="confirmPassword" placeholder="password" name="password_confirm" required
-                       onchange="isSame()">
+                <input type="password" id="confirmPassword" placeholder="password" name="password_confirm" required onchange="isSame()">
                 <i class="fa fa-eye" id="InputConfirmPassword"></i>
                 <div id="pw_check" style="color: black; font-size: 12px; font-weight: bold"></div>
             </div>
@@ -76,17 +76,18 @@
         $('#profile_image').click();
     })*/
 
-    function isSame() {
+    function isSame(){
         let password = document.getElementById('password');
         let confirm_password = document.getElementById('confirmPassword');
-        if (password.value !== '' && confirm_password.value !== '') {
-            if (password.value === confirm_password.value) {
-                document.getElementById('pw_check').innerHTML = '비밀번호가 일치합니다.';
-            } else {
-                document.getElementById('pw_check').innerHTML = '비밀번호가 일치하지 않습니다.';
+        if (password.value!==''&&confirm_password.value!==''){
+            if(password.value===confirm_password.value){
+                document.getElementById('pw_check').innerHTML='비밀번호가 일치합니다.';
+            }else{
+                document.getElementById('pw_check').innerHTML='비밀번호가 일치하지 않습니다.';
             }
         }
     }
+
 
 
 </script>
