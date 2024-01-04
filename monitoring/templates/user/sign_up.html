@@ -1,20 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청중의소리를부탁해</title>
-    <link href="../../static/css/sign_up.css" rel="stylesheet">
+    <link href="{% static 'css/sign_up.css' %}" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link rel="icon" href="../../static/img/favicon.ico">
 </head>
 <body>
-<header class="full-background-paper">
-    <img src="../../static/img/introduction-page-img/logo2.png">
-    <br><br><br>
-    <h2>회원가입</h2>
-</header>
-<div class="user-inputs">
+<div class="user-inputs" style="border: 1px solid #E6E6E6; margin-top: 100px;">
+    <h2 style="color: black;margin-left: 127px;">회원가입</h2>
     <form method="post" enctype="multipart/form-data" action="{% url 'user:signup' %}">
         <div class="user-input-Privacy">
             <label>아이디</label>
@@ -53,9 +50,9 @@
         {#                   title="전화번호 형식: 010-1234-5678" placeholder="010-0000-0000">#}
         {#        </div>#}
 
-        <div style="margin-left:5px;">
-            <button class="btn btn-register" type="submit">회원가입</button>
-            <button style="color: white;" class="btn btn-cancel" type="button" onclick="location.href='/'">취소</button>
+        <div class="user-input-Privacy" style="margin-top: 40px;">
+            <button style="margin-bottom: 15px;" class="btn btn-register" type="submit">회원가입</button>
+            <button class="btn btn-cancel" type="button" onclick="location.href='/'">취소</button>
         </div>
         <!-- <img src="../../static/img/sign-up-image.png" alt="sign-up-image" class="img"> -->
     </form>
@@ -67,6 +64,7 @@
         var name = document.getElementById('fileName');
         name.textContent = file.name;
     }
+
     /*
     $('#button_profile_upload').click(function () {
         $('#profile_image').click();
