@@ -10,13 +10,7 @@
     <link rel="icon" href="../../static/img/favicon.ico">
 </head>
 <body>
-<header class="full-background-paper">
-    <img style="width: 200px; height: 200px;" src="{% static 'img/introduction-page-img/logo.png' %}">
-    <br><br><br>
-    <h2>회원가입</h2>
-</header>
-
-<div class="user-inputs" style="border: 1px solid #E6E6E6;">
+<div class="user-inputs" style="border: 1px solid #E6E6E6; margin-top: 100px;">
     <h2 style="color: black;margin-left: 127px;">회원가입</h2>
     <form method="post" enctype="multipart/form-data" action="{% url 'user:signup' %}">
         <div class="user-input-Privacy">
