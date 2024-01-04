@@ -28,8 +28,7 @@ function videoStart() {
         startRecording(previewPlayer.captureStream())
     })
 
-    // captureIntervalId = setInterval(recording, 60000 * term);
-    captureIntervalId = setInterval(recording, 10000);
+    captureIntervalId = setInterval(recording, 60000 * term);
     startTime = Date.now();
     elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
 
