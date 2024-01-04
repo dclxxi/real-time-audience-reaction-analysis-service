@@ -125,9 +125,9 @@ def time(request):
 @csrf_exempt
 def get_video_file(request):
     if (
-        request.method == "POST"
-        and "video" in request.FILES
-        and "image" in request.FILES
+            request.method == "POST"
+            and "video" in request.FILES
+            and "image" in request.FILES
     ):
         lecture_id = request.POST.get("lecture_id")
         time = request.POST.get("time")
@@ -208,14 +208,14 @@ def model(blob_path):
         return (x - x_off, x + width + x_off, y - y_off, y + height + y_off)
 
     def draw_text(
-        coordinates,
-        image_array,
-        text,
-        color,
-        x_offset=0,
-        y_offset=0,
-        font_scale=0.5,
-        thickness=2,
+            coordinates,
+            image_array,
+            text,
+            color,
+            x_offset=0,
+            y_offset=0,
+            font_scale=0.5,
+            thickness=2,
     ):
         x, y = coordinates[:2]
         cv2.putText(
@@ -267,22 +267,22 @@ def model(blob_path):
 
     def engagement_score(scores):
         if (
-            (scores[6] > 0.6)
-            | (scores[3] > 0.5)
-            | (scores[5] > 0.6)
-            | (scores[0] > 0.2)
-            | (scores[1] > 0.2)
-            | (scores[2] > 0.3)
-            | (scores[4] > 0.3)
+                (scores[6] > 0.6)
+                | (scores[3] > 0.5)
+                | (scores[5] > 0.6)
+                | (scores[0] > 0.2)
+                | (scores[1] > 0.2)
+                | (scores[2] > 0.3)
+                | (scores[4] > 0.3)
         ):
             return (
-                (scores[0] * 0.2)
-                + (scores[1] * 0.2)
-                + (scores[2] * 0.3)
-                + (scores[3] * 0.7)
-                + (scores[4] * 0.3)
-                + (scores[5] * 0.7)
-                + (scores[6] * 1.0)
+                    (scores[0] * 0.2)
+                    + (scores[1] * 0.2)
+                    + (scores[2] * 0.3)
+                    + (scores[3] * 0.7)
+                    + (scores[4] * 0.3)
+                    + (scores[5] * 0.7)
+                    + (scores[6] * 1.0)
             )
         else:
             return 0
@@ -304,15 +304,15 @@ def model(blob_path):
         emotion_label_arg = np.argmax(emotion_classifier.predict(gray_face))
         engagement = engagement_score(emotion_classifier.predict(gray_face)[0])
         positive = (
-            emotion_classifier.predict(gray_face)[0][3]
-            + emotion_classifier.predict(gray_face)[0][5]
+                emotion_classifier.predict(gray_face)[0][3]
+                + emotion_classifier.predict(gray_face)[0][5]
         )
         neutral = emotion_classifier.predict(gray_face)[0][6]
         negative = (
-            emotion_classifier.predict(gray_face)[0][0]
-            + emotion_classifier.predict(gray_face)[0][1]
-            + emotion_classifier.predict(gray_face)[0][2]
-            + emotion_classifier.predict(gray_face)[0][4]
+                emotion_classifier.predict(gray_face)[0][0]
+                + emotion_classifier.predict(gray_face)[0][1]
+                + emotion_classifier.predict(gray_face)[0][2]
+                + emotion_classifier.predict(gray_face)[0][4]
         )
         positives.append(positive)
         neutrals.append(neutral)
@@ -391,13 +391,13 @@ def chatGPT(topic, prompt, reaction):
             {
                 "role": "system",
                 "content": "당신은 교육 전문가로서, 강의 내용에 대한 피드백을 "
-                "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."
-                "발음이나 억양, 속도 등의 음성적 특성에 대한 피드백은 제외하고, "
-                "오로지 강의 내용과 청중의 반응에 초점을 맞춰주세요.\n"
-                "[피드백 형식]\n"
-                "강점: [한 줄로 강점을 기재해 주세요]\n"
-                "약점: [한 줄로 약점을 기재해 주세요]\n"
-                "개선 방법: [한 줄로 개선 방법을 기재해 주세요]",
+                           "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."
+                           "발음이나 억양, 속도 등의 음성적 특성에 대한 피드백은 제외하고, "
+                           "오로지 강의 내용과 청중의 반응에 초점을 맞춰주세요.\n"
+                           "[피드백 형식]\n"
+                           "강점: [한 줄로 강점을 기재해 주세요]\n"
+                           "약점: [한 줄로 약점을 기재해 주세요]\n"
+                           "개선 방법: [한 줄로 개선 방법을 기재해 주세요]",
             },
             {"role": "user", "content": content},
         ],
