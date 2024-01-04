@@ -1,16 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청중의소리를부탁해</title>
-    <link href="../../static/css/sign_up.css" rel="stylesheet">
+    <link href="{% static 'css/sign_up.css' %}" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link rel="icon" href="../../static/img/favicon.ico">
 </head>
 <body>
 <header class="full-background-paper">
-    <img src="../../static/img/introduction-page-img/logo2.png">
+    <img src="../../static/img/introduction-page-img/logo.png">
     <br><br><br>
     <h2>회원가입</h2>
 </header>
@@ -54,9 +55,9 @@
         {#                   title="전화번호 형식: 010-1234-5678" placeholder="010-0000-0000">#}
         {#        </div>#}
 
-        <div style="margin-left:5px; margin-top: 15px;">
-            <button class="btn btn-register" type="submit">회원가입</button>
-            <button style="color: white;" class="btn btn-cancel" type="button" onclick="location.href='/'">취소</button>
+        <div style="margin-top: 40px;">
+            <button style="margin-bottom: 15px;" class="btn btn-register" type="submit">회원가입</button>
+            <button class="btn btn-cancel" type="button" onclick="location.href='/'">취소</button>
         </div>
         <!-- <img src="../../static/img/sign-up-image.png" alt="sign-up-image" class="img"> -->
     </form>

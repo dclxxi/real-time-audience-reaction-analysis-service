@@ -1,7 +1,6 @@
 body {
     margin: 0;
-    background-color: #73C5B7;
-    color: white;
+    color: black;
 }
 
 div {
@@ -37,6 +36,7 @@ header h2 {
 label {
     font-weight: bold;
     font-size: 16px;
+    margin-left: 3px;
 }
 
 input {
@@ -76,13 +76,17 @@ input {
 
 .btn-register, .btn-cancel {
     float: none;
-    color: #03806b;
+    color: black;
+    border: 1px solid grey;
+    width: 100%;
 }
 
-.btn-cancel {
+.btn-cancel:hover {
+    border: 1px solid grey;
     background-color: grey;
-    color: #333;
-    font-style: #fff;
+}
+.btn-register:hover{
+    border: 1px solid #73C5B7;
 }
 
 .img {
@@ -154,6 +158,6 @@ button:hover {
 }
 
 .username-check:hover {
-    background-color: 73C5B7;
+    background-color: #73C5B7;
     border: none;
 }
