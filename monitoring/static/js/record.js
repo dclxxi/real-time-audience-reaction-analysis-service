@@ -73,10 +73,10 @@ function stopRecording() {
     clearInterval(captureIntervalId);
     clearInterval(elapsedTimeIntervalId);
 
-    sendTime(Date.now()).catch(error => console.error(error));
+    sendTime(Date.now());
 }
 
-function sendTime(endTime, elapsedTime) {
+function sendTime(endTime) {
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
     formData.append('start_time', toTimeString(startTime));
@@ -136,12 +136,12 @@ async function sendFile(image, video) {
             $('#reaction').empty();
             let audience_reaction = data['concentration'];
             $('#concentrationTextElement').text(audience_reaction);
-            if(audience_reaction >= 50){
+            if (audience_reaction >= 50) {
                 console.log('굿')
                 emotion.fadeIn();
                 emotion.attr("src", "/static/img/emotion/smile.png");
                 emotion.fadeOut(3000);
-            }else{
+            } else {
                 console.log('배드')
                 emotion.fadeIn();
                 emotion.attr("src", "/static/img/emotion/bad.png");
