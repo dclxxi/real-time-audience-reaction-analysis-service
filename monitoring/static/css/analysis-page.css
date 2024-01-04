@@ -11112,9 +11112,9 @@ nav > div > div > ul > li > a {
 }
 
 .border-wrapping {
-  border: solid;
-  border-radius: 0.6rem;
-  border-color: rgb(233,233,233)!important;
+  border: solid; 
+  border-radius: 0.6rem; 
+  border-color: rgb(233,233,233)!important; 
   padding: 0.4rem;
 }
 

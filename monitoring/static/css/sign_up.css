@@ -122,7 +122,8 @@ input {
     font-size: 20px; 
     color : black
 }
-.btn:hover {
+
+button:hover {
     background-color: #73C5B7;
     color: white;
     transform: translateY(2px);

@@ -5,22 +5,21 @@ body {
 }
 
 .background-image {
-    /* size: 85%; */
     width: 100%;
     height: 100vh;
     background-image: url('../img/cover-page-background.png');
-    background-size: cover;
+    background-size: cover; /* 수정: contain 대신 cover 사용 */
     background-position: center;
     background-repeat: no-repeat;
     background-color: #65AEAA;
-    display: flex;
+    display: flex; /* 수정: 센터 정렬을 위해 flex 사용 */
     justify-content: center;
     align-items: center;
 }
 
 .btn-container {
-    text-align: center;
-} 
+    text-align: center; /* 수정: position: relative 삭제, text-align 추가 */
+}
 
 button {
     padding: 1vw 2vw;
@@ -42,14 +41,16 @@ button {
 }
 
 button:hover {
-    padding: 12px 24px;
-    font-size: 16px;
+    background-color: #FF7043;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
 /* 기본 버튼 스타일 */
 button {
-    padding: 15px 30px; /* 큰 화면에 대한 패딩 조정 */
-    font-size: 18px; /* 큰 화면에 대한 폰트 크기 조정 */
+    /* 기존 스타일 */
+    padding: 10px 20px; /* 작은 화면을 위한 기본 패딩 */
+    font-size: 14px; /* 작은 화면을 위한 기본 폰트 크기 */
 }
 
 /* 중간 크기의 화면을 위한 스타일 */
@@ -57,7 +58,6 @@ button {
     button {
         padding: 12px 24px; /* 중간 크기 화면에 대한 패딩 조정 */
         font-size: 16px; /* 중간 크기 화면에 대한 폰트 크기 조정 */
-        top: 75%;
     }
 }
 
@@ -66,6 +66,5 @@ button {
     button {
         padding: 15px 30px; /* 큰 화면에 대한 패딩 조정 */
         font-size: 18px; /* 큰 화면에 대한 폰트 크기 조정 */
-        top: 77%;
     }
 }

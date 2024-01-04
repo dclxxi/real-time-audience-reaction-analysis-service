@@ -11248,68 +11248,50 @@ header > nav > div > div > ul > li > a {
   margin: 0 auto;
 }
 
-.delete {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.delete:hover {
-  background-color: #ff3333;
-}
-
 .pagination {
   display: flex;
   justify-content: center;
-  list-style-type: none;
   padding: 0;
-  margin: 30px 0;
-}
-
-.pagination span {
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  padding: 6px 10px;
-  margin: 0 4px;
-  color: #337ab7;
-  text-align: center;
+  margin: 20px 0;
+  list-style-type: none;
+  margin-top: 5%;
 }
 
 .pagination a {
-  padding: 6px 10px;
-  margin: 0 4px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  list-style-type: none;
+  color: black;
+  float: left;
+  padding: 8px 16px;
   text-decoration: none;
-  color: #337ab7;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
 }
 
-.pagination .current {
+.pagination a.active {
   background-color: #73C5B7;
   color: white;
-  border-color: #73C5B7;
+  border: 1px solid #73C5B7;
 }
 
-.pagination .disabled {
-  color: #777;
-  border-color: #ddd;
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
 }
 
-.pagination a:hover:not(.current) {
-  background-color: #eee;
-  border-color: #ddd;
+
+.prev-next {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
-.destroy-box {
-  border: none;
-}
 
-.th-title {
-  padding-left: 28px  !important;
-  padding-right: 14px !important;
-  border-top: 1px solid #e7e7e7 !important;
-  text-align: left !important;
+.prev-next-area {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
 }
