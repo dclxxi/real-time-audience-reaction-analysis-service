@@ -151,16 +151,17 @@ async function sendFile(image, video) {
             $('#reaction').empty();
             let audience_reaction = data['concentration'];
             $('#concentrationTextElement').text(audience_reaction);
-            if (audience_reaction >= 50) {
-                console.log('굿')
-                emotion.fadeIn();
+            if (audience_reaction >= 70) {
+                console.log('긍정')
                 emotion.attr("src", "/static/img/emotion/smile.png");
-                emotion.fadeOut(3000);
+            } else if (audience_reaction >= 40) {
+                console.log('중립')
+                emotion.attr("src", "/static/img/emotion/neutral.png");
             } else {
-                console.log('배드')
-                emotion.fadeIn();
+                console.log('부정')
+                // emotion.fadeIn();
                 emotion.attr("src", "/static/img/emotion/bad.png");
-                emotion.fadeOut(3000);
+                // emotion.fadeOut(3000);
             }
         },
         error: function (request, status, error) {
