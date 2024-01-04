@@ -142,6 +142,11 @@ async function sendFile(image, video) {
         success: function (result) {
             console.log('성공');
             const data = $.parseJSON(result);
+            if ($.isEmptyObject(data)) {
+                console.log('얼굴 인식 실패');
+                return;
+            }
+
             const emotion = $('#emotionImage');
             $('#reaction').empty();
             let audience_reaction = data['concentration'];

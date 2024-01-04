@@ -145,7 +145,7 @@ def get_video_file(request):
         results = model(blob_path)
 
         if sum(results.values()) == 0:
-            return HttpResponse(status=200)
+            return HttpResponse(json.dumps({}))
 
         lecture = get_object_or_404(Lecture, pk=lecture_id)
 
