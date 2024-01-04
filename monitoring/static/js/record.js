@@ -150,7 +150,7 @@ async function sendFile(image, video) {
             const emotion = $('#emotionImage');
             $('#reaction').empty();
             let audience_reaction = data['concentration'];
-            $('#concentrationTextElement').text(audience_reaction);
+            $('#concentrationTextElement').text(audience_reaction + '%');
             if (audience_reaction >= 70) {
                 console.log('긍정')
                 emotion.attr("src", "/static/img/emotion/smile.png");
