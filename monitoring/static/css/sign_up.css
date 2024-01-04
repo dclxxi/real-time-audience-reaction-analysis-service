@@ -40,11 +40,13 @@ label {
 }
 
 input {
+    height: 45px;
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid #73C5B7;
     border-radius: 5px
+    margin-top: 5px;
 }
 
 .user-input-Privacy {
