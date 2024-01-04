@@ -75,9 +75,9 @@ input {
 }
 
 .btn-register, .btn-cancel {
-    float: none;
+    /*float: none;*/
     color: black;
-    border: 1px solid grey;
+    border: 1px solid #E6E6E6;
     width: 100%;
 }
 
