@@ -30,8 +30,8 @@ header h2 {
 
 .user-inputs {
     width: 100%;
-    padding: 30px;
     margin: auto;
+    max-width: 350px;
 }
 
 label {
@@ -45,7 +45,7 @@ input {
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid #73C5B7;
-    border-radius: 5px
+    border-radius: 5px;
     margin-top: 5px;
 }
 
@@ -109,8 +109,8 @@ input {
     right: 10px;
     top: 65%;
     transform: translateY(-50%);
-    font-size: 20px; 
-    color : black
+    font-size: 20px;
+    color: black
 }
 
 #InputConfirmPassword {
@@ -119,8 +119,8 @@ input {
     right: 10px;
     top: 65%;
     transform: translateY(-50%);
-    font-size: 20px; 
-    color : black
+    font-size: 20px;
+    color: black
 }
 
 button:hover {

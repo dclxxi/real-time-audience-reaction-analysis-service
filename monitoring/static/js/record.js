@@ -1,7 +1,6 @@
 const recordButton = document.querySelector("#record-button");
 const stopButton = document.querySelector("#stop-button");
 const previewPlayer = document.querySelector("#preview");
-const navButton = document.querySelectorAll("#nav-btn");
 
 let recorder;
 let recordedChunks;
@@ -12,7 +11,6 @@ let time;
 let elapsed_time = document.getElementById('elapsed-time');
 let lecture_id = document.getElementById("id").dataset.id;
 let term = parseInt(document.getElementById("term").dataset.term);
-let flag = 0;
 
 
 function updateElapsedTime() {
@@ -25,7 +23,6 @@ function updateElapsedTime() {
 
 function videoStart() {
     console.log('시작')
-    flag = 1
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
         previewPlayer.srcObject = stream;
         startRecording(previewPlayer.captureStream())
@@ -87,14 +84,6 @@ function stopRecording() {
     clearInterval(elapsedTimeIntervalId);
 
     sendTime(Date.now());
-}
-function cautionAlert(e) {
-    if (flag === 1) {
-        if (confirm("현재 강의 분석이 진행중입니다. 중단하시겠습니까?\n강의 내용은 저장되지 않습니다.")) {
-        } else {
-            e.preventDefault();
-        }
-    }
 }
 
 function sendTime(endTime) {
@@ -186,8 +175,3 @@ async function sendFile(image, video) {
 
 recordButton.addEventListener("click", videoStart);
 stopButton.addEventListener("click", stopRecording);
-recordButton.addEventListener("click", videoStart);
-stopButton.addEventListener("click", stopRecording);
-navButton.forEach((e) => {
-    e.addEventListener('click', cautionAlert)
-});
