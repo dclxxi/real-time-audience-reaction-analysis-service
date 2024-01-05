@@ -83,37 +83,25 @@ def login_view(request):
         return render(request, "user/login_page.html", {"next": next_url})
 
     if request.method == "POST":
-        userid = request.POST.get("userid")
-        password = request.POST.get("password")
-        remember_me = request.POST.get("remember_me")
         next_url = request.POST.get("next") or "/"
+        userid = request.POST.get("userid").strip()
+        password = request.POST.get("password").strip()
+        remember_me = request.POST.get("remember_me")
 
-        if userid == "" or password == "":
-            return render(request, "user/login_page.html")
-
-        try:
-            user = User.objects.get(userid=userid)
-        except User.DoesNotExist:
-            return render(request, "user/login_page.html", {"error": "존재하지 않는 아이디입니다."})
+        if not userid or not password:
+            return render(request, "user/login_page.html", {"error": "아이디와 비밀번호를 입력해주세요.", "next": next_url})
 
         user = authenticate(request, username=userid, password=password)
-
         if user is not None:
             login(request, user)
-
-            if remember_me is not None:
-                request.session.set_expiry(3600 * 24 * 30)  # 30일 동안 유효한 세션
-            else:
-                request.session.set_expiry(0)
+            request.session.set_expiry(3600 * 24 * 30 if remember_me else 0)
 
             if next_url.startswith("/live/record/"):
                 return redirect("live:info")
-
-            return redirect(next_url)
+            else:
+                return redirect(next_url)
         else:
-            return render(
-                request, "user/login_page.html", {"error": "비밀번호가 올바르지 않습니다."}
-            )
+            return render(request, "user/login_page.html", {"error": "아이디 또는 비밀번호가 올바르지 않습니다."})
 
 
 @csrf_exempt
