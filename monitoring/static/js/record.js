@@ -110,9 +110,9 @@ function sendTime(endTime) {
         processData: false,
         contentType: false,
         success: function (result) {
-            /*로딩화면*/
             console.log('성공');
             $('#loading').show();
+            $('body').css('overflow', 'hidden');
         },
         error: function (request, status, error) {
             console.log('에러');
@@ -124,6 +124,7 @@ function sendTime(endTime) {
             console.log('완료');
             setTimeout(function () {
                 $('#loading').hide();
+                $('body').css('overflow', 'auto');
                 location.href = '/report/result/' + lecture_id + '/';
             }, 30000);
         }
