@@ -44,7 +44,7 @@ input {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid #73C5B7;
+    border: 1px solid lightgray;
     border-radius: 5px;
     margin-top: 5px;
 }
@@ -86,7 +86,7 @@ input {
     background-color: grey;
 }
 .btn-register:hover{
-    border: 1px solid #73C5B7;
+    border: 1px solid #181934;
 }
 
 .img {
@@ -128,7 +128,7 @@ input {
 }
 
 button:hover {
-    background-color: #73C5B7;
+    background-color: #181934;
     color: white;
     transform: translateY(2px);
 }

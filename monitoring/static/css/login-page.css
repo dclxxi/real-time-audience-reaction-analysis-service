@@ -1,7 +1,6 @@
 html,
 body {
   height: 100%;
-  background-color: #5a9e93;
 }
 
 .form-signin {
@@ -115,4 +114,24 @@ body {
   text-decoration: none;
   font-size: 16px;
   font-weight: bold;
+}
+#login_btn{
+  border: 1px solid lightgray;
+}
+#cancel_btn{
+  border: 1px solid lightgray;
+}
+#login_btn:hover {
+    color: white;
+    border: 1px solid #181934;
+    background-color: #181934;
+}
+#cancel_btn:hover {
+    color: white;
+    border: 1px solid grey;
+    background-color: grey;
+}
+button:hover {
+    transition: all 0.3s ease;
+    transform: translateY(2px);
 }
