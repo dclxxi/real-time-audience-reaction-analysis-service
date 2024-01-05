@@ -11,7 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback, Reaction
-from user.models import User
 from .models import Lecture
 from .utils import analyze_image, extract_audio, upload_to_storage, save_blob, clean_up_files
 
@@ -27,10 +26,13 @@ def info(request):
     if request.method == "POST":
         topic = request.POST.get("topic")
         term = request.POST.get("term")
+        category = request.POST.get("category")
 
-        lecture = Lecture()
-        lecture.topic = topic
-        lecture.user = get_object_or_404(User, pk=request.user.pk)
+        if not all([topic, term, category]):
+            return JsonResponse({'error': 'Missing data'}, status=400)
+
+        user = request.user
+        lecture = Lecture(topic=topic, user=user)
         lecture.save()
 
         request.session["lecture_id"] = lecture.id
@@ -42,36 +44,13 @@ def info(request):
 @login_required
 def record(request, id, term):
     session_lecture_id = request.session.get("lecture_id")
-
     if not session_lecture_id or session_lecture_id != id:
         return redirect("live:info")
 
     if request.method == "GET":
         lecture = get_object_or_404(Lecture, id=id)
-
-        return render(
-            request,
-            "live/analysis_page.html",
-            context=dict(id=id, term=term, topic=lecture.topic),
-        )
-
-    if request.method == "POST":
-        pass
-
-
-@csrf_exempt
-def time(request):
-    if request.method == "POST":
-        lecture_id = request.POST.get("lecture_id")
-        start_time = request.POST.get("start_time")
-        end_time = request.POST.get("end_time")
-
-        lecture = get_object_or_404(Lecture, pk=lecture_id)
-        lecture.start_time = start_time
-        lecture.end_time = end_time
-        lecture.save()
-
-        return HttpResponse(status=200)
+        context = {'id': id, 'term': term, 'topic': lecture.topic}
+        return render(request, "live/analysis_page.html", context)
 
 
 @csrf_exempt
@@ -132,3 +111,23 @@ def process_media(request):
     clean_up_files([image_path, video_path, audio_path])
 
     return HttpResponse(json.dumps(results))
+
+
+@csrf_exempt
+def update_lecture_time(request):
+    if request.method == "POST":
+        lecture_id = request.POST.get("lecture_id")
+        start_time = request.POST.get("start_time")
+        end_time = request.POST.get("end_time")
+
+        if not all([lecture_id, start_time, end_time]):
+            return JsonResponse({'error': 'Missing data'}, status=400)
+
+        try:
+            lecture = get_object_or_404(Lecture, pk=lecture_id)
+            lecture.start_time = start_time
+            lecture.end_time = end_time
+            lecture.save()
+            return JsonResponse({'message': 'Lecture times updated successfully'}, status=200)
+        except ValueError as e:
+            return JsonResponse({'error': str(e)}, status=400)

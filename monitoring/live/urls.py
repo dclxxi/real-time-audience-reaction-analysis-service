@@ -9,5 +9,5 @@ urlpatterns = [
     path("record/", views.info),
     path("record/<int:id>/<int:term>/", views.record, name='record'),
     path('video/', views.process_media),
-    path('time/', views.time),
+    path('time/', views.update_lecture_time),
 ]
