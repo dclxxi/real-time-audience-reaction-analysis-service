@@ -150,6 +150,7 @@ function sendFile(image, video) {
         url: '/live/video/',
         data: formData,
         method: 'POST',
+        dataType: "json",
         processData: false,
         contentType: false,
         success: function (result) {
