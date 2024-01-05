@@ -8,6 +8,6 @@ urlpatterns = [
     path("info/", views.info, name='info'),
     path("record/", views.info),
     path("record/<int:id>/<int:term>/", views.record, name='record'),
-    path('video/', views.get_video_file),
+    path('video/', views.process_media),
     path('time/', views.time),
 ]
