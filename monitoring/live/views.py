@@ -77,37 +77,6 @@ def record(request, id, term):
 
 
 @csrf_exempt
-def get_capture_file(request):
-    if request.method == "POST" and "image" in request.FILES:
-        lecture_id = request.POST.get("lecture_id")
-        time = request.POST.get("time")
-        image = request.FILES["image"]
-
-        uuid_name = uuid4().hex
-
-        blob_name = f"{uuid_name}.jpg"
-        blob_path = os.path.join(MEDIA_ROOT, blob_name)
-        with default_storage.open(blob_path, "wb+") as destination:
-            for chunk in image.chunks():
-                destination.write(chunk)
-
-        # mlflow
-
-        lecture = get_object_or_404(Lecture, pk=lecture_id)
-
-        reaction = Reaction()
-        reaction.lecture = lecture
-        reaction.time = time
-        reaction.concentration = 0
-        reaction.negative = 0
-        reaction.neutral = 0
-        reaction.positive = 0
-        reaction.save()
-
-        return HttpResponse("image")
-
-
-@csrf_exempt
 def time(request):
     if request.method == "POST":
         lecture_id = request.POST.get("lecture_id")
@@ -174,7 +143,6 @@ def get_video_file(request):
         bucket = client.get_bucket(bucket_name)
         mp3_blob = bucket.blob(upload_file_name)
         mp3_blob.upload_from_filename(upload_file_path)
-        print(mp3_blob.public_url)
 
         audio_content = run_stt(upload_file_name)
         print("출력: ", audio_content)
