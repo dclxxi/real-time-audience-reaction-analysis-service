@@ -181,6 +181,7 @@ function sendFile(image, video) {
         },
         error: function (request, status, error) {
             console.log('에러');
+            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
             console.log(request);
             console.log(status);
             console.log(error);
