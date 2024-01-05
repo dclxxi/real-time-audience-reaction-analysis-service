@@ -13,6 +13,8 @@ let elapsed_time = document.getElementById('elapsed-time');
 let lecture_id = document.getElementById("id").dataset.id;
 let term = parseInt(document.getElementById("term").dataset.term);
 let flag = 0;
+let isRecordingStopped = false;
+let remainingDbSaves = 0;
 
 function updateElapsedTime() {
     const elapsedTime = Date.now() - startTime;
@@ -85,12 +87,13 @@ function stopRecording() {
     clearInterval(captureIntervalId);
     clearInterval(elapsedTimeIntervalId);
 
+    isRecordingStopped = true;
     sendTime(Date.now());
 }
 
 function cautionAlert(e) {
     if (flag === 1) {
-        if (confirm("현재 강의 분석이 진행중입니다. 중단하시겠습니까?\n강의 내용은 저장되지 않습니다.")) {
+        if (confirm("현재 반응 분석이 진행중입니다. 중단하시겠습니까?\n강의 내용은 저장되지 않습니다.")) {
         } else {
             e.preventDefault();
         }
@@ -122,11 +125,7 @@ function sendTime(endTime) {
         },
         complete: function () {
             console.log('완료');
-            setTimeout(function () {
-                $('#loading').hide();
-                $('body').css('overflow', 'auto');
-                location.href = '/report/result/' + lecture_id + '/';
-            }, 30000);
+            checkAndHideLoading();
         }
     })
 }
@@ -137,13 +136,15 @@ function toTimeString(timestamp) {
     return date.toISOString().split('T')[1].split('.')[0];
 }
 
-async function sendFile(image, video) {
+function sendFile(image, video) {
     console.log('센드파일')
     const formData = new FormData();
     formData.append('lecture_id', lecture_id);
     formData.append('time', time);
     formData.append('image', image);
     formData.append('video', video);
+
+    remainingDbSaves += 1;
 
     $.ajax({
         url: '/live/video/',
@@ -153,6 +154,10 @@ async function sendFile(image, video) {
         contentType: false,
         success: function (result) {
             console.log('성공');
+
+            remainingDbSaves -= 1;
+            checkAndHideLoading();
+
             const data = $.parseJSON(result);
             if ($.isEmptyObject(data)) {
                 console.log('얼굴 인식 실패');
@@ -171,9 +176,7 @@ async function sendFile(image, video) {
                 emotion.attr("src", "/static/img/emotion/neutral.png");
             } else {
                 console.log('부정')
-                // emotion.fadeIn();
                 emotion.attr("src", "/static/img/emotion/bad.png");
-                // emotion.fadeOut(3000);
             }
         },
         error: function (request, status, error) {
@@ -183,6 +186,16 @@ async function sendFile(image, video) {
             console.log(error);
         }
     })
+}
+
+function checkAndHideLoading() {
+    if (isRecordingStopped && (remainingDbSaves === 0)) {
+        setTimeout(function () {
+            // $('#loading').hide();
+            $('body').css('overflow', 'auto');
+            location.href = '/report/result/' + lecture_id + '/';
+        }, 5000);
+    }
 }
 
 recordButton.addEventListener("click", videoStart);
