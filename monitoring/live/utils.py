@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 from openai import OpenAI
 from tensorflow.keras.models import load_model
 
-KEY_PATH = "/home/ubuntu/infra-earth-408904-fcc745c63739.json"
+KEY_PATH = os.environ.get('KEY_PATH')
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
 
 client = storage.Client(credentials=credentials, project=credentials.project_id)
