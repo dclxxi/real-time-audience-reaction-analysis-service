@@ -23,6 +23,15 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
                 border-bottom: dotted;
             }
         }
+        #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
+            color: red;
+            /*background: #1abc9c;*/
+        }
+
+        #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
+            color: white;
+            background: #1abc9c;
+        }
     </style>
 
 
@@ -46,7 +55,7 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
                         <input id="search" type="text" name="search" placeholder="검색어를 입력해주세요."
                                value="{{ request.GET.search }}">
                         <button type="submit" class="btn btn-dark"
-                                style="--bs-btn-border-color: #5a9e93; --bs-btn-bg: #5a9e93">검색
+                                style="--bs-btn-border-color: #73C5B7; --bs-btn-bg: #73C5B7">검색
                         </button>
                     </div>
                 </form>
@@ -157,7 +166,7 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
 
     })
 </script>
+</script>
 {% endblock %}
-
 </body>
 </html>
