@@ -10,7 +10,7 @@
     <link rel="icon" href="../../static/img/favicon.ico">
 </head>
 <body>
-<div class="user-inputs" style="border: 1px solid #E6E6E6; margin-top: 100px;">
+<div class="user-inputs" style="border-radius: 10px; border: 1px solid #E6E6E6; margin-top: 100px;">
     <h2 style="color: black;margin-left: 127px;">회원가입</h2>
     <form method="post" enctype="multipart/form-data" action="{% url 'user:signup' %}">
         <div class="user-input-Privacy">
@@ -52,7 +52,7 @@
 
         <div class="user-input-Privacy" style="margin-top: 40px;">
             <button style="margin-bottom: 15px;" class="btn btn-register" type="submit">회원가입</button>
-            <button class="btn btn-cancel" type="button" onclick="location.href='/'">취소</button>
+            <button class="btn btn-cancel" type="button" onclick="location.href='/user/login/'">취소</button>
         </div>
         <!-- <img src="../../static/img/sign-up-image.png" alt="sign-up-image" class="img"> -->
     </form>
