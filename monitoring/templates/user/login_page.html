@@ -28,12 +28,15 @@
         </a>
 
         <div class="form-floating">
-            <input type="text" class="form-control" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0; box-shadow: none; border:1px solid lightgrey" placeholder=""
+            <input type="text" class="form-control"
+                   style="border-bottom-right-radius: 0; border-bottom-left-radius: 0; box-shadow: none; border:1px solid lightgrey"
+                   placeholder=""
                    id="id" name="userid" required>
             <label for="floatingInput">ID</label>
         </div>
         <div class="form-floating">
-            <input style="box-shadow: none; border:1px solid lightgrey" type="password" class="form-control" id="pw" name="password" placeholder="" required>
+            <input style="box-shadow: none; border:1px solid lightgrey" type="password" class="form-control" id="pw"
+                   name="password" placeholder="" required>
             <label for="floatingPassword">Password</label>
         </div>
 
@@ -45,10 +48,13 @@
         </div>
 
         <input type="hidden" name="next" value="{{ next }}">
-        <button style= "font-weight: bold;" class="btn w-100 py-2" type="submit" id="login_btn">로그인</button>
-        <button id="cancel_btn" style= "margin-top:10px;font-weight: bold;" class="btn w-100 py-2" onclick="location.href='/'">취소</button>
+        <button style="font-weight: bold;" class="btn w-100 py-2" type="submit" id="login_btn">로그인</button>
+        <button id="cancel_btn" style="margin-top:10px;font-weight: bold;" class="btn w-100 py-2"
+                onclick="location.href='/'">취소
+        </button>
     </form>
-    <div class="text-center pt-2">계정이 없으신가요?<a style="color:black; " class="text-center sign-up-button" href="{% url 'user:signup' %}">
+    <div class="text-center pt-2">계정이 없으신가요?<a style="color:black; " class="text-center sign-up-button"
+                                               href="{% url 'user:signup' %}">
         회원가입</a></div>
     <p>{{ error }}</p>
 </main>
