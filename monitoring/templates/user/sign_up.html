@@ -11,31 +11,32 @@
 </head>
 <body>
 <div class="user-inputs" style="border-radius: 10px; border: 1px solid #E6E6E6; margin-top: 100px;">
-    <h2 style="color: black;margin-left: 127px;">회원가입</h2>
+    <h2 style="color: black; text-align: center;">회원가입</h2>
     <form method="post" enctype="multipart/form-data" action="{% url 'user:signup' %}">
         <div class="user-input-Privacy">
             <label>아이디</label>
-            <input type="text" pattern="[A-Za-z0-9]{6,15}" title="아이디는 6~15자리의 영문자와 숫자로 이루어져야 합니다." placeholder="ID"
-                   name="userid" required>
+            <div style="display: flex">
+                <input type="text" placeholder="id" id="userid" name="userid" required>
+                <button type="button" id="checkUserIdButton">중복 확인</button>
+            </div>
+            <div class="check" id="user_id_check"></div>
         </div>
-
         <div class="user-input-Privacy">
             <div class="test-class">
                 <label>비밀번호</label>
-                <input type="password" id="password" placeholder="password" name="password" required
-                        onchange="isSame()">
+                <input type="password" id="password" placeholder="password" name="password" required>
                 <i class="fa fa-eye" id="InputPassword"></i>
             </div>
+            <div class="check" id="password_check"></div>
         </div>
         <div class="user-input-Privacy">
             <div class="test-class">
                 <label>비밀번호 확인</label>
-                <input type="password" id="confirmPassword" placeholder="password" name="password_confirm" required onchange="isSame()">
+                <input type="password" id="confirmPassword" placeholder="password" name="password_confirm" required>
                 <i class="fa fa-eye" id="InputConfirmPassword"></i>
-                <div id="pw_check" style="color: black; font-size: 12px; font-weight: bold"></div>
             </div>
+            <div class="check" id="password_confirm_check"></div>
         </div>
-
         <div class="user-input-Privacy">
             <label>이름</label>
             <input type="text" placeholder="홍길동" name="name" required>
@@ -44,47 +45,18 @@
             <label>E-mail</label>
             <input type="email" placeholder="example@email.com" name="email" required>
         </div>
-        {#        <div class="user-input-Privacy">#}
-        {#            <label for="phone">전화번호:</label>#}
-        {#            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"#}
-        {#                   title="전화번호 형식: 010-1234-5678" placeholder="010-0000-0000">#}
-        {#        </div>#}
-
         <div class="user-input-Privacy" style="margin-top: 40px;">
-            <button style="margin-left:auto; margin-bottom: 15px;" class="btn btn-register" type="submit">회원가입</button>
-            <button style="margin:auto;" class="btn btn-cancel" type="button" onclick="location.href='/user/login/'">취소</button>
+            <button style="margin-left:auto; margin-bottom: 15px;"
+                    class="btn btn-register" type="submit" id="signupButton">회원가입
+            </button>
+            <button style="margin:auto;"
+                    class="btn btn-cancel" type="button" onclick="location.href='/user/login/'">취소
+            </button>
         </div>
-        <!-- <img src="../../static/img/sign-up-image.png" alt="sign-up-image" class="img"> -->
     </form>
 </div>
-<p>{{ error }}</p>
-<script>
-    function loadFile(input) {
-        var file = input.files[0];
-        var name = document.getElementById('fileName');
-        name.textContent = file.name;
-    }
 
-    /*
-    $('#button_profile_upload').click(function () {
-        $('#profile_image').click();
-    })*/
-
-    function isSame(){
-        let password = document.getElementById('password');
-        let confirm_password = document.getElementById('confirmPassword');
-        if (password.value!==''&&confirm_password.value!==''){
-            if(password.value===confirm_password.value){
-                document.getElementById('pw_check').innerHTML='비밀번호가 일치합니다.';
-            }else{
-                document.getElementById('pw_check').innerHTML='비밀번호가 일치하지 않습니다.';
-            }
-        }
-    }
-
-
-
-</script>
 <script src="../../static/js/see_password.js"></script>
+<script src="../../static/js/sign_up.js"></script>
 </body>
 </html>

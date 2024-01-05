@@ -30,7 +30,7 @@ header h2 {
 .user-inputs {
     width: 100%;
     margin: auto;
-    max-width: 350px;
+    max-width: 450px;
 }
 
 label {
@@ -46,7 +46,7 @@ input {
     box-sizing: border-box;
     border: 1px solid lightgray;
     border-radius: 5px;
-    margin-top: 5px;
+    margin: 5px 0;
 }
 
 .user-input-Privacy {
@@ -85,7 +85,8 @@ input {
     border: 1px solid grey;
     background-color: grey;
 }
-.btn-register:hover{
+
+.btn-register:hover {
     border: 1px solid #181934;
 }
 
@@ -160,4 +161,33 @@ button:hover {
 .username-check:hover {
     background-color: #73C5B7;
     border: none;
+}
+
+.check {
+    color: red;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#checkUserIdButton {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px;
+    height: 45px;
+    margin: 5px;
+    display: inline-block;
+    background-color: white;
+    color: #73C5B7;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }

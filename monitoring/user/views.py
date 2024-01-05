@@ -3,10 +3,20 @@ import re
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from user.models import User
+
+
+@csrf_exempt
+def check_userid_existence(request):
+    if request.method == "GET":
+        userid = request.GET.get('userid')
+        is_taken = User.objects.filter(userid=userid).exists()
+
+        return JsonResponse({'is_taken': is_taken})
 
 
 @csrf_exempt
@@ -48,7 +58,7 @@ def validate_userid(userid):
     if not userid or not re.match("^[a-zA-Z0-9]{6,15}$", userid):
         return "아이디는 6~15자리의 영문자와 숫자로 이루어져야 합니다."
 
-    if User.objects.filter(username=userid).exists():
+    if User.objects.filter(userid=userid).exists():
         return "이미 존재하는 사용자 ID입니다."
 
     return None
@@ -61,10 +71,6 @@ def validate_password(password, userid, name, email):
     patterns = ["[0-9]", "[a-z]", "[A-Z]", "[^0-9a-zA-Z]"]
     if sum(bool(re.search(pattern, password)) for pattern in patterns) < 3:
         return "비밀번호는 숫자, 소문자, 대문자, 특수 문자 중 최소 3가지를 포함해야 합니다."
-
-    email_prefix = email.split("@")[0]
-    if any(info.lower() in password.lower() for info in [userid, name, email_prefix]):
-        return "비밀번호에 개인 정보나 일반적인 단어를 사용할 수 없습니다."
 
     return None
 
