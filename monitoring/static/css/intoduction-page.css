@@ -3888,7 +3888,8 @@ html {
 }
 
 .copyright {
-    color: #a9a9a9
+    color: #a9a9a9;
+    border-top: 1px solid lightgrey;;
 }
 
 .footer-bot {
