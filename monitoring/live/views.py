@@ -125,9 +125,18 @@ def update_lecture_time(request):
 
         try:
             lecture = get_object_or_404(Lecture, pk=lecture_id)
-            lecture.start_time = start_time
-            lecture.end_time = end_time
-            lecture.save()
-            return JsonResponse({'message': 'Lecture times updated successfully'}, status=200)
+            reactions = Reaction.objects.filter(lecture=lecture)
+
+            if reactions.exists():
+                lecture.start_time = start_time
+                lecture.end_time = end_time
+                lecture.save()
+                print("'message': 'Lecture times updated successfully'")
+                return JsonResponse({'message': 'Lecture times updated successfully'}, status=200)
+            else:
+                lecture.delete()
+                print("'message': 'Lecture deleted successfully'")
+                return JsonResponse({'message': 'Lecture deleted successfully'}, status=200)
+
         except ValueError as e:
             return JsonResponse({'error': str(e)}, status=400)
