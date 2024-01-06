@@ -7724,7 +7724,7 @@ textarea.form-control-lg {
 }
 
 .p-5 {
-  padding: 3rem !important;
+  padding:  25px 0 50px 0 !important;
 }
 
 .px-0 {
@@ -11003,7 +11003,6 @@ html {
   display: flex;
   position: relative;
   margin: auto;
-  margin-top: 4%;
   font-size: 25px;
 }
 
