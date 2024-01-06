@@ -3,9 +3,9 @@ import json
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -17,26 +17,22 @@ from report.models import Reaction
 def result(request, id):
     if request.method == 'GET':
         lecture = get_object_or_404(Lecture, pk=id)
-
         reactions = Reaction.objects.filter(lecture=lecture).order_by('time')
 
-        reactions_with_feedbacks = []
-        for reaction in reactions:
-            feedback_content = reaction.feedback.content if reaction.feedback else '피드백이 없습니다.'
-            feedback_content_escaped = escape_control_characters(feedback_content)
-            reaction_dict = {
+        reactions_with_feedbacks = [
+            {
                 'time': reaction.time,
                 'concentration': reaction.concentration,
                 'negative': reaction.negative,
                 'neutral': reaction.neutral,
                 'positive': reaction.positive,
-                'feedback': feedback_content_escaped,
+                'feedback': escape_control_characters(reaction.feedback.content) if reaction.feedback else '피드백이 없습니다.',
             }
-            reactions_with_feedbacks.append(reaction_dict)
+            for reaction in reactions
+        ]
 
         reactions_json = json.dumps(reactions_with_feedbacks, ensure_ascii=False)
-
-        time_diff = elapsed_time(lecture.start_time, lecture.end_time)
+        time_diff = calculate_elapsed_time(lecture.start_time, lecture.end_time)
 
         context = {
             'lecture': lecture,
@@ -51,6 +47,9 @@ def result(request, id):
 
 
 def escape_control_characters(s):
+    if not isinstance(s, str):
+        return ''
+
     return s.translate(str.maketrans({
         '\b': '\\b',
         '\f': '\\f',
@@ -60,49 +59,48 @@ def escape_control_characters(s):
     }))
 
 
-def elapsed_time(start_time, end_time):
+def calculate_elapsed_time(start_time, end_time):
     if start_time and end_time:
         start_time = datetime.combine(datetime.today(), start_time)
         end_time = datetime.combine(datetime.today(), end_time)
-        elapsed_time = end_time - start_time
+        time_diff = end_time - start_time
 
-        return round(elapsed_time.total_seconds() / 60)
+        return round(time_diff.total_seconds() / 60)
 
     return 0
 
 
 @login_required
-def list(request):
+def list_lectures(request):
     if request.method == 'GET':
         search_query = request.GET.get('search', '')
         page_number = request.GET.get('page', 1)
 
-        lectures = (Lecture.objects
-                    .filter(Q(user=request.user), Q(topic__icontains=search_query))
-                    .order_by('-datetime')
-                    .distinct()
-                    )
+        lectures_query = (Lecture.objects
+                          .filter(Q(user=request.user), Q(topic__icontains=search_query))
+                          .order_by('-datetime').distinct())
 
-        paginator = Paginator(lectures, 10)
-        page_obj = paginator.get_page(page_number)
+        paginator = Paginator(lectures_query, 10)
 
-        context = {
-            'lectures': page_obj,
-        }
+        try:
+            lectures = paginator.page(page_number)
+        except PageNotAnInteger:
+            lectures = paginator.page(1)
+        except EmptyPage:
+            lectures = paginator.page(paginator.num_pages)
 
+        context = {'lectures': lectures}
         return render(request, 'report/storage_list.html', context)
-
-    if request.method == 'POST':
-        pass
 
 
 @csrf_exempt
 def delete_lecture(request):
-    if request.method == "GET":
-        pass
-
     if request.method == "POST":
-        lecture_id = request.POST.get("lecture_id", None)
-        lecture = Lecture.objects.get(id=lecture_id)
+        lecture_id = request.POST.get("lecture_id")
+        if not lecture_id:
+            return JsonResponse({'error': 'No lecture ID provided'}, status=400)
+
+        lecture = get_object_or_404(Lecture, id=lecture_id, user=request.user)
         lecture.delete()
-        return HttpResponse("delete complete")
+
+        return JsonResponse({'message': 'Lecture deleted successfully'})

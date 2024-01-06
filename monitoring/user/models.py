@@ -12,7 +12,7 @@ class User(AbstractBaseUser):
     profile_image = models.TextField(null=True)
     userid = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=24)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
 
     objects = CustomUserManager()
 
