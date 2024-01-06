@@ -1,42 +1,37 @@
 body {
     margin: 0;
-    color: black;
+    color: #000
 }
 
 div {
-    box-sizing: border-box;
-}
-
-.full-background-paper {
-    width: 100%;
-    color: white;
+    box-sizing: border-box
 }
 
 header {
     text-align: center;
     margin-top: 5%;
-    margin-bottom: -10px;
+    margin-bottom: -10px
 }
 
 header h4 {
-    margin-bottom: 0;
+    margin-bottom: 0
 }
 
 header h2 {
     margin: 0;
-    padding: 0;
+    padding: 0
 }
 
 .user-inputs {
     width: 100%;
     margin: auto;
-    max-width: 450px;
+    max-width: 450px
 }
 
 label {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 16px;
-    margin-left: 3px;
+    margin-left: 3px
 }
 
 input {
@@ -44,68 +39,62 @@ input {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid lightgray;
+    border: 1px solid #d3d3d3;
     border-radius: 5px;
-    margin: 5px 0;
+    margin: 5px 0
 }
 
 .user-input-Privacy {
     width: 100%;
-    padding: 10px;
-}
-
-.btns {
-    margin-top: 10%;
-    text-align: center;
+    padding: 10px
 }
 
 .btn {
     display: inline-block;
     margin: 0 5px;
-    background-color: white;
-    color: #73C5B7;
+    background-color: #fff;
+    color: #73c5b7;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 700;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all .3s ease
 }
 
-.btn-register, .btn-cancel {
-    /*float: none;*/
-    color: black;
-    border: 1px solid #E6E6E6;
-    width: 100%;
+.btn-cancel, .btn-register {
+    color: #000;
+    border: 1px solid #e6e6e6;
+    width: 100%
 }
 
 .btn-cancel:hover {
     border: 1px solid grey;
-    background-color: grey;
+    background-color: grey
 }
 
 .btn-register:hover {
-    border: 1px solid #181934;
+    border: 1px solid #181934
 }
 
 .img {
-    width: 100%;
+    width: 100%
 }
 
 .fa {
     cursor: pointer;
     position: absolute;
-    padding: 0.5%;
+    padding: .5%
 }
 
 .test-class {
-    position: relative;
+    position: relative
 }
 
 #password {
-    width: 100%;
+    width: 100%
 }
 
 #InputPassword {
@@ -115,7 +104,7 @@ input {
     top: 65%;
     transform: translateY(-50%);
     font-size: 20px;
-    color: black
+    color: #000
 }
 
 #InputConfirmPassword {
@@ -125,51 +114,22 @@ input {
     top: 65%;
     transform: translateY(-50%);
     font-size: 20px;
-    color: black
+    color: #000
 }
 
 button:hover {
     background-color: #181934;
-    color: white;
-    transform: translateY(2px);
-}
-
-#passwordError {
-    color: red;
-    font-size: 14px;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-#passwordConfirmError {
-    color: red;
-    font-size: 14px;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.username-check {
-    display: inline-block;
-    cursor: pointer;
-    color: #73C5B7;
-    font-weight: bold;
-    background-color: white;
-    border: none;
-    border-radius: 5px;
-}
-
-.username-check:hover {
-    background-color: #73C5B7;
-    border: none;
+    color: #fff;
+    transform: translateY(2px)
 }
 
 .check {
     color: red;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 700;
     margin: 5px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis
 }
 
 #checkUserIdButton {
@@ -180,14 +140,14 @@ button:hover {
     height: 45px;
     margin: 5px;
     display: inline-block;
-    background-color: white;
-    color: #73C5B7;
+    background-color: #fff;
+    color: #73c5b7;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 700;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all .3s ease
 }
