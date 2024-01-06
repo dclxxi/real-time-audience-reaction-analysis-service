@@ -10915,10 +10915,8 @@ html {
   color: grey;
 }
 #mainNav .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus {
-  color: red;
 }
 #mainNav .navbar-nav li.nav-item a.nav-link.active {
-  color: red;
 }
 #mainNav .navbar-toggler {
   font-size: 80%;
@@ -10939,12 +10937,12 @@ html {
     margin-top: 0;
   }
   #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
-    color: #fff;
-    background: #1abc9c;
+    /*color: #fff;*/
+    /*background: #1abc9c;*/
   }
   #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
-    color: #fff;
-    background: #1abc9c;
+    /*color: #fff;*/
+    /*background: #1abc9c;*/
   }
   #mainNav.navbar-shrink {
     padding-top: 0.5rem;
@@ -11230,18 +11228,6 @@ section.notice {
 header > nav > div > div > ul > li > a {
   position: relative;
 }
-
-.current-page::after {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 3px; /* 밑줄 두께 */
-  background-color: white;
-  position: absolute;
-  left: 0;
-  bottom: 5px;
-}
-
 .container-list {
   width: 1100px;
   margin: 0 auto;

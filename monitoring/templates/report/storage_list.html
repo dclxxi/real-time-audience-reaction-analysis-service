@@ -23,18 +23,7 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
                 border-bottom: dotted;
             }
         }
-        #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
-            color: red;
-            /*background: #1abc9c;*/
-        }
-
-        #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
-            color: white;
-            background: #1abc9c;
-        }
     </style>
-
-
 </head>
 <body>
 
@@ -123,13 +112,6 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
     </span>
     </div>
 </section>
-<!-- Footer Section -->
-<footer class="mb-auto">
-    <div class="copyright py-1 text-center text-white footer-bot">
-        <div class="container"><small>Copyright &copy; 청중을 구해조</small></div>
-    </div>
-</footer>
-
 <!-- Bootstrap core JS-->
 <script>
     window.onload = function () {
@@ -151,7 +133,7 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
                 method: 'POST',
                 success: function (result) {
                     console.log('성공')
-                    location.replace('/report/list');
+                    location.replace('/report/list/');
                 },
                 error: function (result, status, error) {
                     console.log('에러')
@@ -165,7 +147,6 @@ integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQI
 
 
     })
-</script>
 </script>
 {% endblock %}
 </body>
