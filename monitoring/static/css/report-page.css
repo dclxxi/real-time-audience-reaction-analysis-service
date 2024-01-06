@@ -2614,7 +2614,7 @@ select:disabled {
 }
 
 .p-5 {
-  padding: 3rem !important;
+    padding: 25px 0 50px 0 !important
 }
 
 .px-0 {
