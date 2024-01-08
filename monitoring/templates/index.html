@@ -28,38 +28,30 @@
     {#    <link href="{% static 'css/storage-list.css' %}"/>#}
 </head>
 <style>
-    .current-page::after {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 3px;
-        background-color: black;
-        position: absolute;
-        left: 0;
-        bottom: 5px;
-    }
     @media (min-width: 992px) {
-        .navbar-collapse{
-            background-color: white; !important;
+        .navbar-collapse {
+            background-color: white;
+        !important;
         }
     }
 </style>
 <body style="height: 100%">
-<header class="mb-auto p-5" style="border-bottom: 1px solid lightgrey">
+<header class="mb-auto p-5" style="padding: 0 !important;">
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav"
-         style="background-color:white !important;">
+         style="background-color:white !important; border-bottom: 1px solid lightgrey; ">
         <div class="container" style="position: fixed; top: 0; right: 0; left: 0;">
             <a class="navbar-brand" href="/" id='nav-btn'>
                 <img src="{% static 'img/introduction-page-img/m_logo.png' %}">
             </a>
             <button class="navbar-toggler text-uppercase font-weight-bold text-white rounded" type="button"
                     data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                    aria-expanded="false" aria-label="Toggle navigation" style="color: black !important;">
                 Menu
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto" style="text-align: center;">
+                <ul class="navbar-nav ms-auto"
+                    style="text-align: center; background-color: white; margin-top: 0 !important;">
                     <li class="nav-item mx-0 mx-lg-1">
                         <a id='nav-btn' class="nav-link py-3 px-0 px-lg-3 rounded" href="/">소개</a>
                     </li>
@@ -71,11 +63,13 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item mx-0 mx-lg-1">
-                            <a id='nav-btn' class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'user:logout' %}">LOGOUT</a>
+                            <a id='nav-btn' class="nav-link py-3 px-0 px-lg-3 rounded"
+                               href="{% url 'user:logout' %}">LOGOUT</a>
                         </li>
                     {% else %}
                         <li class="nav-item mx-0 mx-lg-1">
-                            <a id='nav-btn' class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'user:login' %}">LOGIN</a>
+                            <a id='nav-btn' class="nav-link py-3 px-0 px-lg-3 rounded"
+                               href="{% url 'user:login' %}">LOGIN</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -108,7 +102,8 @@
 </body>
 <footer class="mb-auto">
     <div class="copyright py-1 text-center text-white footer-bot">
-        <div class="container" style="color: black; background-color: white;"><small>Copyright &copy; 청중을 구해조</small></div>
+        <div class="container" style="color: black; background-color: white;"><small>Copyright &copy; 청중을 구해조</small>
+        </div>
     </div>
 </footer>
 </html>
