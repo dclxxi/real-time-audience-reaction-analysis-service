@@ -4,6 +4,7 @@ document.getElementById('password').addEventListener('input', validatePassword);
 document.getElementById('password').addEventListener('input', validatePasswordConfirmation);
 document.getElementById('confirmPassword').addEventListener('input', validatePasswordConfirmation);
 document.getElementById('signupButton').addEventListener('click', validateUserIdBeforeSignup);
+document.getElementById('signupButton').addEventListener('click', validateTermsBeforeSignup);
 
 function checkUserId() {
     const userid = document.getElementById('userid').value;
@@ -80,5 +81,41 @@ function validateUserIdBeforeSignup(event) {
     }
 }
 
+const terms = {
+    '1': {
+        'modal': document.getElementById('terms1Modal'),
+        'button': document.getElementById('terms1Button'),
+        'checkbox': document.getElementById('terms1'),
+        'confirm': document.getElementById('confirm1')
+    },
+    '2': {
+        'modal': document.getElementById('terms2Modal'),
+        'button': document.getElementById('terms2Button'),
+        'checkbox': document.getElementById('terms2'),
+        'confirm': document.getElementById('confirm2')
+    }
+};
 
+for (const key in terms) {
+    (function (key) {
+        const term = terms[key];
 
+        term.button.onclick = function () {
+            term.modal.style.display = "block";
+        };
+
+        term.confirm.addEventListener('click', function () {
+            term.checkbox.checked = true;
+            term.modal.style.display = 'none';
+        });
+    })(key);
+}
+
+function validateTermsBeforeSignup() {
+    for (const key in terms) {
+        if (!terms[key].checkbox.checked) {
+            alert('모든 약관에 동의해주셔야 회원가입이 가능합니다.');
+            return false;
+        }
+    }
+}
