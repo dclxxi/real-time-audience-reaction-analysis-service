@@ -446,7 +446,7 @@ select:disabled {
     left: 0;
     transition: all 0.2s ease-in-out;
     opacity: 0;
-    background-color: rgba(26, 188, 156, 0.9);
+    background-color: rgb(0 0 0 / 50%);
 }
 
 .portfolio .portfolio-item .portfolio-item-caption:hover {
@@ -3836,31 +3836,37 @@ html {
 
 @media (min-width: 992px) {
 
-  #mainNav {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    transition: padding-top 0.3s, padding-bottom 0.3s;
-  }
-  #mainNav .navbar-brand {
-    font-size: 1.75em;
-    transition: font-size 0.3s;
-  }
-  #mainNav .navbar-nav {
-    margin-top: 0;
-  }
-  #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
-    /*background: #1abc9c;*/
-  }
-  #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
-    color:grey;
-  }
-  #mainNav.navbar-shrink {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-  #mainNav.navbar-shrink .navbar-brand {
-    font-size: 1.5em;
-  }
+    #mainNav {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+        transition: padding-top 0.3s, padding-bottom 0.3s;
+    }
+
+    #mainNav .navbar-brand {
+        font-size: 1.75em;
+        transition: font-size 0.3s;
+    }
+
+    #mainNav .navbar-nav {
+        margin-top: 0;
+    }
+
+    #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
+        /*background: #1abc9c;*/
+    }
+
+    #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
+        color: grey;
+    }
+
+    #mainNav.navbar-shrink {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    #mainNav.navbar-shrink .navbar-brand {
+        font-size: 1.5em;
+    }
 }
 
 .form-floating input.form-control {
@@ -3893,9 +3899,9 @@ html {
 }
 
 .footer-bot {
-  bottom: 0;
-  right: 0;
-  left: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 nav > div > div > ul > li > a {
