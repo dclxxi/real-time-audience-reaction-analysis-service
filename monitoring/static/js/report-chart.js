@@ -47,7 +47,7 @@ function initLineChart() {
                     beginAtZero: false,
                     title: {
                         display: true,
-                        text: '인원'
+                        text: '집중도'
                     },
                     ticks: {
                         stepSize: 10,
