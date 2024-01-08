@@ -74,7 +74,9 @@ def process_media(request):
     image_path = os.path.join(MEDIA_ROOT, f"{uuid_name}.jpg")
     save_blob(image, image_path)
 
-    results = analyze_image(image_path)
+    results = analyze_image(image_path)  # haarcascade 모델
+    #  results = analyze_image2(image_path) # mediapipe 모델
+
     if not results or sum(results.values()) == 0:
         clean_up_files([image_path])
         return HttpResponse(json.dumps({}))
