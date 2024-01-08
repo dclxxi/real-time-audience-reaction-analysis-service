@@ -92,8 +92,14 @@
         const navLinks = document.querySelectorAll('nav ul li a');
 
         navLinks.forEach(function (link) {
-            if (link.href === currentLocation) {
-                link.classList.add('active');
+            if (link.href !== window.location.origin + '/') {
+                if (currentLocation.startsWith(link.href)) {
+                    link.classList.add('active');
+                }
+            } else {
+                if (currentLocation === link.href) {
+                    link.classList.add('active');
+                }
             }
         });
     });
