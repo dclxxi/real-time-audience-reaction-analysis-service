@@ -17,9 +17,7 @@ credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
 
 client = storage.Client(credentials=credentials, project=credentials.project_id)
 
-openai = OpenAI(
-    api_key="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"
-)
+openai = OpenAI(api_key="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")
 
 
 def save_blob(file, path):
@@ -88,20 +86,19 @@ def generate_feedback(topic, prompt, reaction):
             {
                 "role": "system",
                 "content": "당신은 교육 전문가로서, 강의 내용에 대한 피드백을 "
-                           "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."
-                           "발음이나 억양, 속도 등의 음성적 특성에 대한 피드백은 제외하고, "
-                           "오로지 강의 내용과 청중의 반응에 초점을 맞춰주세요.\n"
-                           "[피드백 형식]\n"
-                           "강점: [한 줄로 강점을 기재해 주세요]\n"
-                           "약점: [한 줄로 약점을 기재해 주세요]\n"
-                           "개선 방법: [한 줄로 개선 방법을 기재해 주세요]",
+                "제공해야 합니다. 강점, 약점, 개선 방법을 순서대로 작성해주세요."
+                "발음이나 억양, 속도 등의 음성적 특성에 대한 피드백은 제외하고, "
+                "오로지 강의 내용과 청중의 반응에 초점을 맞춰주세요.\n"
+                "[피드백 형식]\n"
+                "강점: [한 줄로 강점을 기재해 주세요]\n"
+                "약점: [한 줄로 약점을 기재해 주세요]\n"
+                "개선 방법: [한 줄로 개선 방법을 기재해 주세요]",
             },
             {"role": "user", "content": content},
         ],
     )
 
     result = completion.choices[0].message.content
-
     return result
 
 
@@ -122,13 +119,30 @@ def analyze_image(image_path):
         x_off, y_off = offsets
         return (x - x_off, x + width + x_off, y - y_off, y + height + y_off)
 
-    def draw_text(coordinates, image_array, text, color, x_offset=0, y_offset=0, font_scale=0.5, thickness=2):
+    def draw_text(
+        coordinates,
+        image_array,
+        text,
+        color,
+        x_offset=0,
+        y_offset=0,
+        font_scale=0.5,
+        thickness=2,
+    ):
         x, y = coordinates[:2]
-        cv2.putText(image_array, text, (x + x_offset, y + y_offset), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color,
-                    thickness, cv2.LINE_AA)
+        cv2.putText(
+            image_array,
+            text,
+            (x + x_offset, y + y_offset),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            font_scale,
+            color,
+            thickness,
+            cv2.LINE_AA,
+        )
 
     def preprocess_input(x, v2=True):
-        x = x.astype('float32')
+        x = x.astype("float32")
         x = x / 255.0
         if v2:
             x = x - 0.5
@@ -136,10 +150,17 @@ def analyze_image(image_path):
         return x
 
     image_path = image_path
-    detection_model_path = 'haarcascade_frontalface_default.xml'
+    detection_model_path = "haarcascade_frontalface_default.xml"
 
-    emotion_model_path = 'emotion_model_InceptionV3.h5'
-    emotion_labels = {0: 'angry', 1: 'fear', 2: 'happy', 3: 'sad', 4: 'surprise', 5: 'neutral'}
+    emotion_model_path = "emotion_model_InceptionV3.h5"
+    emotion_labels = {
+        0: "angry",
+        1: "fear",
+        2: "happy",
+        3: "sad",
+        4: "surprise",
+        5: "neutral",
+    }
     font = cv2.FONT_HERSHEY_SIMPLEX
 
     emotion_offsets = (0, 0)
@@ -154,17 +175,29 @@ def analyze_image(image_path):
 
     def highest_emotion(positive, neutral, negative):
         if positive == max([positive, neutral, negative]):
-            return 'positive'
+            return "positive"
         elif neutral == max([positive, neutral, negative]):
-            return 'neutral'
+            return "neutral"
         else:
-            return 'negative'
+            return "negative"
 
     def engagement_score(scores):
-        if ((scores[5] > 0.6) | (scores[2] > 0.5) | (scores[4] > 0.6) | (scores[0] > 0.2) | (scores[1] > 0.3) | (
-                scores[3] > 0.3)):
-            return ((scores[0] * 0.25) + (scores[1] * 0.3) + (scores[2] * 0.6) + (scores[3] * 0.3) + (
-                    scores[4] * 0.6) + (scores[5] * 0.9))
+        if (
+            (scores[5] > 0.6)
+            | (scores[2] > 0.5)
+            | (scores[4] > 0.6)
+            | (scores[0] > 0.2)
+            | (scores[1] > 0.3)
+            | (scores[3] > 0.3)
+        ):
+            return (
+                (scores[0] * 0.25)
+                + (scores[1] * 0.3)
+                + (scores[2] * 0.6)
+                + (scores[3] * 0.3)
+                + (scores[4] * 0.6)
+                + (scores[5] * 0.9)
+            )
         else:
             return 0
 
@@ -184,10 +217,16 @@ def analyze_image(image_path):
 
         emotion_label_arg = np.argmax(emotion_classifier.predict(gray_face))
         engagement = engagement_score(emotion_classifier.predict(gray_face)[0])
-        positive = emotion_classifier.predict(gray_face)[0][2] + emotion_classifier.predict(gray_face)[0][4]
+        positive = (
+            emotion_classifier.predict(gray_face)[0][2]
+            + emotion_classifier.predict(gray_face)[0][4]
+        )
         neutral = emotion_classifier.predict(gray_face)[0][5]
-        negative = emotion_classifier.predict(gray_face)[0][0] + emotion_classifier.predict(gray_face)[0][1] + \
-                   emotion_classifier.predict(gray_face)[0][3]
+        negative = (
+            emotion_classifier.predict(gray_face)[0][0]
+            + emotion_classifier.predict(gray_face)[0][1]
+            + emotion_classifier.predict(gray_face)[0][3]
+        )
         positives.append(positive)
         neutrals.append(neutral)
         negatives.append(negative)
@@ -199,7 +238,7 @@ def analyze_image(image_path):
         draw_text(face_coordinates, rgb_image, emotion_text, color, -20, -20, 0.7, 2)
 
     plt.imshow(rgb_image)
-    cv2.imwrite('result_emotion_image.jpg', rgb_image)
+    cv2.imwrite("result_emotion_image.jpg", rgb_image)
 
     def calculate_percentage(emotion):
         if len(emotion) == 0:

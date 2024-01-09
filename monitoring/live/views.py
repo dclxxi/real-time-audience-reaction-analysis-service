@@ -12,9 +12,17 @@ from django.views.decorators.csrf import csrf_exempt
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback, Reaction
 from .models import Lecture
-from .utils import analyze_image, extract_audio, upload_to_storage, save_blob, clean_up_files
+from .utils import (
+    analyze_image,
+    extract_audio,
+    upload_to_storage,
+    save_blob,
+    clean_up_files,
+    run_stt,
+    generate_feedback,
+)
 
-BUCKET_NAME = 'stt-test-bucket-aivle'
+BUCKET_NAME = "stt-test-bucket-aivle"
 
 
 @csrf_exempt
@@ -29,7 +37,7 @@ def info(request):
         category = request.POST.get("category")
 
         if not all([topic, term, category]):
-            return JsonResponse({'error': 'Missing data'}, status=400)
+            return JsonResponse({"error": "Missing data"}, status=400)
 
         user = request.user
         lecture = Lecture(topic=topic, user=user)
@@ -49,26 +57,26 @@ def record(request, id, term):
 
     if request.method == "GET":
         lecture = get_object_or_404(Lecture, id=id)
-        context = {'id': id, 'term': term, 'topic': lecture.topic}
+        context = {"id": id, "term": term, "topic": lecture.topic}
         return render(request, "live/analysis_page.html", context)
 
 
 @csrf_exempt
 def process_media(request):
     if request.method != "POST":
-        return JsonResponse({'error': 'Invalid request'}, status=400)
+        return JsonResponse({"error": "Invalid request"}, status=400)
 
     try:
-        image = request.FILES['image']
-        video = request.FILES['video']
+        image = request.FILES["image"]
+        video = request.FILES["video"]
     except KeyError:
-        return JsonResponse({'error': 'Missing files'}, status=400)
+        return JsonResponse({"error": "Missing files"}, status=400)
 
-    lecture_id = request.POST.get('lecture_id')
-    lecture_time = request.POST.get('time')
+    lecture_id = request.POST.get("lecture_id")
+    lecture_time = request.POST.get("time")
 
     if not lecture_id or not lecture_time:
-        return JsonResponse({'error': 'Missing data'}, status=400)
+        return JsonResponse({"error": "Missing data"}, status=400)
 
     uuid_name = uuid4().hex
     image_path = os.path.join(MEDIA_ROOT, f"{uuid_name}.jpg")
@@ -89,7 +97,7 @@ def process_media(request):
         concentration=results.get("concentration", 0),
         negative=results.get("negative", 0),
         neutral=results.get("neutral", 0),
-        positive=results.get("positive", 0)
+        positive=results.get("positive", 0),
     )
     reaction.save()
 
@@ -101,12 +109,53 @@ def process_media(request):
     upload_to_storage(BUCKET_NAME, audio_path, upload_file_name)
 
     # audio_content = run_stt(BUCKET_NAME, upload_file_name)
-
+    #
     # feedback_content = generate_feedback(lecture.topic, audio_content, reaction)
-    feedback_content = "f{lecture.topic} 주제의 피드백입니다."
+    # feedback_content = "f{lecture.topic} 주제의 피드백입니다."
+    feedback_content = """
+강점: 
+
+- 강의 주제에 대한 내용을 다루고 있다.
+- 내용에 대한 구체적인 예시를 제시하고 있다.
+
+약점:
+
+- 청중의 집중도가 낮아서 내용 전달의 효과가 떨어질 수 있다.
+- 긍정적인 반응이 부족하고 부정적인 반응이 상대적으로 높은 것으로 보아, 명확한 표현과 설명이 필요한 부분이 있을 수 있다.
+- 내용의 구성이 중첩되고 부분적으로 이해하기 어려울 수 있다.
+
+개선 방법:
+
+- 청중의 집중도를 높이기 위해, 목소리의 크기와 톤에 변화를 주며 흥미를 유발하는 예시나 이야기를 더 넣어 주세요.
+- 긍정적인 반응을 높이기 위해, 내용을 더욱 명확하고 구체적으로 설명해 주세요.
+- 내용의 중첩을 최소화하고 구성을 명확하게 해 주세요. 비슷한 내용이 반복되지 않도록 새로운 관점이나 예시를 추가하는 것도 도움이 될 수 있습니다."""
+    type = ["강점:", "약점:", "개선 방법:"]
+    gpt_answer = {}
+    print(feedback_content)
+    k = 0
+    for text in feedback_content.split("\n"):
+        text = text.strip()
+        print("출력", text)
+        if len(text) != 0:
+            if text in type:
+                text = text.split(":")[0]
+                gpt_answer[text] = gpt_answer.get(text, [])
+                k = text
+            else:
+                text = text[2:].strip()
+                gpt_answer[k].append(text)
+    print(gpt_answer)
+    strength_content = gpt_answer["강점"]
+    weakness_content = gpt_answer["약점"]
+    improve_content = gpt_answer["개선 방법"]
+
+    print(gpt_answer)
     feedback = Feedback(
         reaction=reaction,
-        content=feedback_content
+        content=feedback_content,
+        strength=json.dumps(strength_content),
+        weakness=json.dumps(weakness_content),
+        improvement=json.dumps(improve_content),
     )
     feedback.save()
 
@@ -123,7 +172,7 @@ def update_lecture_time(request):
         end_time = request.POST.get("end_time")
 
         if not all([lecture_id, start_time, end_time]):
-            return JsonResponse({'error': 'Missing data'}, status=400)
+            return JsonResponse({"error": "Missing data"}, status=400)
 
         try:
             lecture = get_object_or_404(Lecture, pk=lecture_id)
@@ -134,11 +183,15 @@ def update_lecture_time(request):
                 lecture.end_time = end_time
                 lecture.save()
                 print("'message': 'Lecture times updated successfully'")
-                return JsonResponse({'message': 'Lecture times updated successfully'}, status=200)
+                return JsonResponse(
+                    {"message": "Lecture times updated successfully"}, status=200
+                )
             else:
                 lecture.delete()
                 print("'message': 'Lecture deleted successfully'")
-                return JsonResponse({'message': 'Lecture deleted successfully'}, status=200)
+                return JsonResponse(
+                    {"message": "Lecture deleted successfully"}, status=200
+                )
 
         except ValueError as e:
-            return JsonResponse({'error': str(e)}, status=400)
+            return JsonResponse({"error": str(e)}, status=400)
