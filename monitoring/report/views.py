@@ -18,6 +18,19 @@ def result(request, id):
     if request.method == 'GET':
         lecture = get_object_or_404(Lecture, pk=id)
         reactions = Reaction.objects.filter(lecture=lecture).order_by('time')
+        reaction_count = reactions.count()
+
+        averages = {
+            'concentration': sum(reaction.concentration for reaction in reactions) / reaction_count,
+            'negative': sum(reaction.positive for reaction in reactions) / reaction_count,
+            'neutral': sum(reaction.neutral for reaction in reactions) / reaction_count,
+            'positive': sum(reaction.negative for reaction in reactions) / reaction_count,
+        }
+        # averages = []
+        # averages.append(sum(reaction.concentration for reaction in reactions) / reaction_count)
+        # averages.append(sum(reaction.positive for reaction in reactions) / reaction_count)
+        # averages.append(sum(reaction.neutral for reaction in reactions) / reaction_count)
+        # averages.append(sum(reaction.negative for reaction in reactions) / reaction_count)
 
         reactions_with_feedbacks = [
             {
@@ -39,8 +52,11 @@ def result(request, id):
         context = {
             'lecture': lecture,
             'reactions_json': reactions_json,
+            'averages': averages,
             'time_diff': time_diff,
         }
+
+        print(averages)
 
         return render(request, 'report/report_page.html', context)
 

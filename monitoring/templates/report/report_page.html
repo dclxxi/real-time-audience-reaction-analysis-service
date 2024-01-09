@@ -25,17 +25,19 @@
             <div style="width: 100%">
                 <h3 style="margin-bottom: 10px; font-size: 35px;!important;">&bull; &nbsp;{{ lecture.topic }}</h3>
                 <div style="display: flex; flex-direction: row;">
+                    {{ averages|json_script:"averages-data" }}
                     <div class="lecture-content">
                         <h4>강의자</h4>
                         <p>{{ lecture.user.name }}</p>
                         <h4>카테고리</h4>
                         <p>{{ lecture.category }}</p>
-                    </div>
-                    <div class="lecture-content">
                         <h4>강의 일자</h4>
                         <p>{{ lecture.datetime|date:"Y.m.d" }}</p>
                         <h4>강의 시간</h4>
                         <p>{{ time_diff }}분</p>
+                    </div>
+                    <div class="lecture-content" style="padding: 0 30px;">
+                        <canvas id="emotionDoughnutChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -64,6 +66,7 @@
     </main>
     <script type="text/javascript">
         const reactions = JSON.parse('{{ reactions_json|safe }}');
+        const averages = JSON.parse(document.getElementById('averages-data').textContent);
     </script>
 
     <script src="{% static 'js/report-chart.js' %}"></script>
