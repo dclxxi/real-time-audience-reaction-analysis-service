@@ -76,17 +76,25 @@ function initLineChart() {
                     const strength = chartData.strengths[index];
                     const weakness = chartData.weaknesses[index];
                     const improvement = chartData.improvements[index];
-                    console.log(strength);
-                    strength.forEach((element)=>{
-                        const tmp = document.createElement('div');
-                        tmp.innerHTML = `
-                            <p>{{element}}</p>
-                        `
-                        document.querySelector('.take1').append(tmp)
-                    });
-
+                    const tmp = document.createElement("div")
+                    let strength_txt = ''
+                    let weakness_txt = ''
+                    let improvement_txt = ''
+                    for (var x of strength){
+                        strength_txt += '- ' + x + '\n\n';
+                    }
+                    for (var x of weakness){
+                        weakness_txt += '- ' + x + '\n\n';
+                    }
+                    for (var x of improvement){
+                        improvement_txt += '- ' + x + '\n\n';
+                    }
+                    // document.querySelector(".take1").append(tmp);
                     updateBarChart(reaction.positive, reaction.neutral, reaction.negative);
-                    document.getElementById('feedback-display').innerHTML = feedback.replace(/\\n/g, '<br>');
+                    // document.getElementById('feedback-display').innerHTML = feedback.replace(/\\n/g, '<br>');
+                    document.querySelector(".take1").innerHTML = strength_txt.replace(/\\n/g, '<br>');
+                    document.querySelector(".take2").innerHTML = weakness_txt.replace(/\\n/g, '<br>');
+                    document.querySelector(".take3").innerHTML = improvement_txt.replace(/\\n/g, '<br>');
                 }
             },
         }

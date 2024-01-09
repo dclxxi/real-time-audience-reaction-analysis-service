@@ -12,8 +12,9 @@
             }
 
         }
-        @media (max-width: 970px){
-            .container-fluid{
+
+        @media (max-width: 970px) {
+            .container-fluid {
                 padding-left: 0 !important;
             }
         }
@@ -27,14 +28,14 @@
     </style>
 
     <main style="padding-top: 80px !important;">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 150px; padding:0">
-    <div class="container-fluid" style="padding-left: 280px;">
-        <h3 class="navbar-brand" style="font-size: 35px;!important;">강의 정보</h3>
-    </div>
-  </nav>
-{#    <div class="container-fluid" style="height:140px; margin-bottom: 20px;background-color: #f2f2f2; border: 1px solid black">#}
-{#        <h3 style="font-size: 35px;!important;">강의 정보</h3>#}
-{#    </div>#}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 150px; padding:0">
+            <div class="container-fluid" style="padding-left: 280px;">
+                <h3 class="navbar-brand" style="font-size: 35px;!important;">강의 정보</h3>
+            </div>
+        </nav>
+        {#    <div class="container-fluid" style="height:140px; margin-bottom: 20px;background-color: #f2f2f2; border: 1px solid black">#}
+        {#        <h3 style="font-size: 35px;!important;">강의 정보</h3>#}
+        {#    </div>#}
         <div class="mb-auto p-5 container contents-center">
 
             <div style="width: 100%">
@@ -68,10 +69,29 @@
                 </div>
                 <div class="overall-feedback" style="border-left: 1px solid lightgrey;">
                     <h4 style="padding: 12px; border-left: 5px solid black">피드백</h4>
-{#                    <div id="feedback-display" style="white-space: pre-wrap; padding: 20px; font-size: 20px;">#}
-{#                        그래프 위에 마우스를 올려 피드백을 확인하세요.#}
-{#                    </div>#}
-                    <div class="take1"></div>
+                    {#                    <div id="feedback-display" style="white-space: pre-wrap; padding: 20px; font-size: 20px;">#}
+                    {#                        그래프 위에 마우스를 올려 피드백을 확인하세요.#}
+                    {#                    </div>#}
+
+                    <div style="margin-left: 30px; width: 100%">
+                        <div style="margin-top: 20px;">
+                            <div style="margin-bottom: 10px; font-size: 20px; font-weight: bold;">강점</div>
+                            <div class="take1"
+                                 style="color: #393e46; width: 435px; border-radius:10px; border:1px solid #73C5B7; white-space: pre-wrap; padding: 30px; font-size: 16px;"></div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <div style="margin-bottom: 10px; font-size: 20px; font-weight: bold;">약점</div>
+                            <div class="take2"
+                                 style="color: #393e46; width: 435px;border-radius:10px;border:1px solid #73C5B7; white-space: pre-wrap; padding: 30px; font-size: 16px;"></div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <div style="margin-bottom: 10px; font-size: 20px; font-weight: bold;">개선 방법</div>
+                            <div class="take3"
+                                 style="color: #393e46; width: 435px;border-radius:10px;border:1px solid #73C5B7; white-space: pre-wrap; padding: 30px; font-size: 16px;"></div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
 
