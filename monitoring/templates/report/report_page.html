@@ -23,13 +23,13 @@
     <main style="padding-top: 80px !important;">
         <div class="mb-auto p-5 container contents-center">
             <div style="width: 100%">
-                <h3 style="margin-bottom: 10px; font-size: 35px;!important;">강의 정보</h3>
+                <h3 style="margin-bottom: 10px; font-size: 35px;!important;">&bull; &nbsp;{{ lecture.topic }}</h3>
                 <div style="display: flex; flex-direction: row;">
                     <div class="lecture-content">
-                        <h4>강의 주제</h4>
-                        <p>{{ lecture.topic }}</p>
                         <h4>강의자</h4>
                         <p>{{ lecture.user.name }}</p>
+                        <h4>카테고리</h4>
+                        <p>{{ lecture.category }}</p>
                     </div>
                     <div class="lecture-content">
                         <h4>강의 일자</h4>
@@ -38,7 +38,6 @@
                         <p>{{ time_diff }}분</p>
                     </div>
                 </div>
-
             </div>
 
             <hr style="width: 100%">

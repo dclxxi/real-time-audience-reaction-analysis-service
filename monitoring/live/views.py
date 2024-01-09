@@ -32,7 +32,7 @@ def info(request):
             return JsonResponse({'error': 'Missing data'}, status=400)
 
         user = request.user
-        lecture = Lecture(topic=topic, user=user)
+        lecture = Lecture(topic=topic, category=category, user=user)
         lecture.save()
 
         request.session["lecture_id"] = lecture.id

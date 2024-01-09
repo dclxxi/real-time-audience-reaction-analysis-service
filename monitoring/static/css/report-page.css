@@ -3808,28 +3808,28 @@ html {
 /*}*/
 
 .lecture-content {
-  /*width: 100%;*/
-  /*display: flex;*/
-  /*position: relative;*/
-  /*left: 50%;*/
-  /*transform: translateX(-50%);*/
-  border-left: 2px solid lightgrey;
-  margin-top: 60px;
-  margin-bottom: 50px;
-  width: 100%
-  /*box-sizing: border-box;*/
-  /*flex-direction: column;;*/
+    /*width: 100%;*/
+    /*display: flex;*/
+    /*position: relative;*/
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    border-left: 2px solid lightgrey;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    width: 100%
+    /*box-sizing: border-box;*/
+    /*flex-direction: column;;*/
 
 }
 
 .lecture-content h4 {
-  margin: 20px 0;
-  padding-left: 10px;
-  border-left: 5px solid black;
+    margin: 20px 0;
+    padding-left: 10px;
+    border-left: 5px solid black;
 }
 
 .lecture-content p {
-  margin: 20px;
+    margin: 20px;
 }
 
 .lecture-right {
