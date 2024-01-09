@@ -45,14 +45,15 @@ function initLineChart() {
             scales: {
                 y: {
                     beginAtZero: false,
+                    min: 0,
+                    max: 100,
                     title: {
                         display: true,
-                        text: '인원'
+                        text: '집중도'
                     },
                     ticks: {
-                        stepSize: 10,
+                        stepSize: 20,
                         beginAtZero: true,
-                        max: 30
                     }
                 },
                 x: {

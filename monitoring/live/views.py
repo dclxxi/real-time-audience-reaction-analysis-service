@@ -12,16 +12,10 @@ from django.views.decorators.csrf import csrf_exempt
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback, Reaction
 from .models import Lecture
-from .utils import (
-    analyze_image,
-    extract_audio,
-    upload_to_storage,
-    save_blob,
-    clean_up_files,
-    run_stt,
-)
+from .utils import analyze_image, extract_audio, upload_to_storage, save_blob, clean_up_files, run_stt, \
+    generate_feedback
 
-BUCKET_NAME = "stt-test-bucket-aivle"
+BUCKET_NAME = 'stt-test-bucket-aivle'
 
 
 @csrf_exempt
@@ -36,10 +30,10 @@ def info(request):
         category = request.POST.get("category")
 
         if not all([topic, term, category]):
-            return JsonResponse({"error": "Missing data"}, status=400)
+            return JsonResponse({'error': 'Missing data'}, status=400)
 
         user = request.user
-        lecture = Lecture(topic=topic, user=user)
+        lecture = Lecture(topic=topic, category=category, user=user)
         lecture.save()
 
         request.session["lecture_id"] = lecture.id
@@ -56,32 +50,34 @@ def record(request, id, term):
 
     if request.method == "GET":
         lecture = get_object_or_404(Lecture, id=id)
-        context = {"id": id, "term": term, "topic": lecture.topic}
+        context = {'id': id, 'term': term, 'topic': lecture.topic}
         return render(request, "live/analysis_page.html", context)
 
 
 @csrf_exempt
 def process_media(request):
     if request.method != "POST":
-        return JsonResponse({"error": "Invalid request"}, status=400)
+        return JsonResponse({'error': 'Invalid request'}, status=400)
 
     try:
-        image = request.FILES["image"]
-        video = request.FILES["video"]
+        image = request.FILES['image']
+        video = request.FILES['video']
     except KeyError:
-        return JsonResponse({"error": "Missing files"}, status=400)
+        return JsonResponse({'error': 'Missing files'}, status=400)
 
-    lecture_id = request.POST.get("lecture_id")
-    lecture_time = request.POST.get("time")
+    lecture_id = request.POST.get('lecture_id')
+    lecture_time = request.POST.get('time')
 
     if not lecture_id or not lecture_time:
-        return JsonResponse({"error": "Missing data"}, status=400)
+        return JsonResponse({'error': 'Missing data'}, status=400)
 
     uuid_name = uuid4().hex
     image_path = os.path.join(MEDIA_ROOT, f"{uuid_name}.jpg")
     save_blob(image, image_path)
 
-    results = analyze_image(image_path)
+    results = analyze_image(image_path)  # haarcascade 모델
+    #  results = analyze_image2(image_path) # mediapipe 모델
+
     if not results or sum(results.values()) == 0:
         clean_up_files([image_path])
         return HttpResponse(json.dumps({}))
@@ -107,9 +103,12 @@ def process_media(request):
 
     audio_content = run_stt(BUCKET_NAME, upload_file_name)
 
-    # feedback_content = generate_feedback(lecture.topic, audio_content, reaction)
-    feedback_content = "f{lecture.topic} 주제의 피드백입니다."
-    feedback = Feedback(reaction=reaction, content=feedback_content)
+    feedback_content = generate_feedback(lecture.topic, audio_content, reaction)
+    # feedback_content = "f{lecture.topic} 주제의 피드백입니다."
+    feedback = Feedback(
+        reaction=reaction,
+        content=feedback_content
+    )
     feedback.save()
 
     clean_up_files([image_path, video_path, audio_path])
@@ -125,15 +124,22 @@ def update_lecture_time(request):
         end_time = request.POST.get("end_time")
 
         if not all([lecture_id, start_time, end_time]):
-            return JsonResponse({"error": "Missing data"}, status=400)
+            return JsonResponse({'error': 'Missing data'}, status=400)
 
         try:
             lecture = get_object_or_404(Lecture, pk=lecture_id)
-            lecture.start_time = start_time
-            lecture.end_time = end_time
-            lecture.save()
-            return JsonResponse(
-                {"message": "Lecture times updated successfully"}, status=200
-            )
+            reactions = Reaction.objects.filter(lecture=lecture)
+
+            if reactions.exists():
+                lecture.start_time = start_time
+                lecture.end_time = end_time
+                lecture.save()
+                print("'message': 'Lecture times updated successfully'")
+                return JsonResponse({'message': 'Lecture times updated successfully'}, status=200)
+            else:
+                lecture.delete()
+                print("'message': 'Lecture deleted successfully'")
+                return JsonResponse({'message': 'Lecture deleted successfully'}, status=200)
+
         except ValueError as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            return JsonResponse({'error': str(e)}, status=400)

@@ -1,15 +1,44 @@
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomUserManager(BaseUserManager):
     def get_by_natural_key(self, userid):
-        return self.get(userid=userid)
+        return self.get(**{self.model.USERNAME_FIELD: userid})
+
+    def create_user(self, userid, email, name, password=None, **extra_fields):
+        """
+        Create and save a User with the given userid and password.
+        """
+        if not userid:
+            raise ValueError(_('The User ID must be set'))
+        if not email:
+            raise ValueError(_('The User Email must be set'))
+
+        email = self.normalize_email(email)
+        user = self.model(userid=userid, email=email, name=name, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, userid, password=None, **extra_fields):
+        """
+        Create and save a SuperUser with the given userid and password.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+
+        return self.create_user(userid, password, **extra_fields)
 
 
 class User(AbstractBaseUser):
-    profile_image = models.TextField(null=True)
     userid = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=24)
     email = models.EmailField(unique=False)

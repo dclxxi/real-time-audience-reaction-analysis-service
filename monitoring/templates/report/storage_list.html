@@ -24,12 +24,10 @@
             }
         }
     </style>
-
-
     </head>
     <body>
 
-    <section class="notice">
+    <section class="notice" style="padding-top: 120px !important; min-height:100%">
         <div class="page-title">
             <div class="container">
                 <h3 style="font-weight:700;">강의 기록</h3>
@@ -90,12 +88,11 @@
         </div>
         <div class="pagination">
     <span class="step-links destroy-box">
+        <a href="?page=1">«</a>
         {% if lectures.has_previous %}
-            <a href="?page=1">처음</a>
-            <a href="?page={{ lectures.previous_page_number }}">이전</a>
+            <a href="?page={{ lectures.previous_page_number }}">‹</a>
         {% else %}
-            <a aria-disabled="true">처음</a>
-            <span class="disabled">이전</span>
+            <a href="?page={{ lectures.number }}">‹</a>
         {% endif %}
 
         {% for i in lectures.paginator.page_range %}
@@ -107,21 +104,14 @@
         {% endfor %}
 
         {% if lectures.has_next %}
-            <a href="?page={{ lectures.next_page_number }}">다음</a>
-            <a href="?page={{ lectures.paginator.num_pages }}">마지막</a>
+            <a href="?page={{ lectures.next_page_number }}">›</a>
         {% else %}
-            <span class="disabled">다음</span>
-            <a aria-disabled="true">마지막</a>
+            <a href="?page={{ lectures.number }}">›</a>
         {% endif %}
+        <a href="?page={{ lectures.paginator.num_pages }}">»</a>
     </span>
         </div>
     </section>
-    <!-- Footer Section -->
-    <footer class="mb-auto">
-        <div class="copyright py-1 text-center text-white footer-bot">
-            <div class="container"><small>Copyright &copy; 청중을 구해조</small></div>
-        </div>
-    </footer>
 
     <!-- Bootstrap core JS-->
     <script>

@@ -1,150 +1,103 @@
-const recordButton = document.querySelector("#record-button");
+const startButton = document.querySelector("#record-button");
 const stopButton = document.querySelector("#stop-button");
-const previewPlayer = document.querySelector("#preview");
-const navButton = document.querySelectorAll("#nav-btn");
+const videoElement = document.querySelector("#preview");
+const navigationButtons = document.querySelectorAll("#nav-btn");
+const currentLectureId = document.getElementById("id").dataset.id;
+const elapsedTimeDisplay = document.getElementById('elapsed-time');
+const recordingInterval = parseInt(document.getElementById("term").dataset.term);
 
 let recorder;
-let recordedChunks;
-let captureIntervalId;
-let startTime;
-let elapsedTimeIntervalId;
-let time;
-let elapsed_time = document.getElementById('elapsed-time');
-let lecture_id = document.getElementById("id").dataset.id;
-let term = parseInt(document.getElementById("term").dataset.term);
-let flag = 0;
+let recordedVideoChunks;
+let recordingIntervalId;
+let elapsedTimeUpdateIntervalId;
+let recordingStartTime;
+let recordingElapsedTime;
+let isRecording = false;
 let isRecordingStopped = false;
-let remainingDbSaves = 0;
+let pendingUploadsCount = 0;
 
-function updateElapsedTime() {
-    const elapsedTime = Date.now() - startTime;
-    const hours = Math.floor(elapsedTime / 3600000);
-    const minutes = Math.floor((elapsedTime % 3600000) / 60000);
-    const seconds = Math.floor((elapsedTime % 60000) / 1000);
-    elapsed_time.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
 
-function videoStart() {
-    console.log('시작')
-    flag = 1
+function initiateRecording() {
+    console.log('Initiate video recording');
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
-        previewPlayer.srcObject = stream;
-        startRecording(previewPlayer.captureStream())
+        videoElement.srcObject = stream;
+        startRecording(videoElement.captureStream())
     })
 
-    captureIntervalId = setInterval(recording, 60000 * term);
-    startTime = Date.now();
-    elapsedTimeIntervalId = setInterval(updateElapsedTime, 1000);
+    isRecording = true;
+    recordingStartTime = Date.now();
+    recordingElapsedTime = 0;
 
-    time = 0;
-}
-
-function recording() {
-    if (recorder && recorder.state === "recording") {
-        recorder.stop();
-    }
-
-    recorder.onstop = async () => {
-        const video = new Blob(recordedChunks, {type: "video/webm"});
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        context.drawImage(previewPlayer, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(async (image) => {
-            try {
-                await sendFile(image, video);
-            } catch (error) {
-                console.error(error);
-            }
-        }, 'image/png');
-
-        recordedChunks = [];
-    }
-
-    if (recorder && recorder.state === "inactive") {
-        recorder.start();
-    }
-
-    time += term;
+    elapsedTimeUpdateIntervalId = setInterval(displayElapsedTime, 1000);
+    recordingIntervalId = setInterval(handleRecordingInterval, 60000 * recordingInterval);
 }
 
 
 function startRecording(stream) {
-    recordedChunks = [];
+    recordedVideoChunks = [];
     recorder = new MediaRecorder(stream);
     recorder.ondataavailable = (e) => {
-        recordedChunks.push(e.data)
+        recordedVideoChunks.push(e.data)
     }
 
     recorder.start();
 }
 
-function stopRecording() {
-    alert('중지!')
-    recorder.stop();
-    previewPlayer.srcObject.getTracks().forEach(track => track.stop());
+function displayElapsedTime() {
+    const elapsedTime = Date.now() - recordingStartTime;
+    const hours = formatElapsedTime(elapsedTime / 3600000);
+    const minutes = formatElapsedTime((elapsedTime % 3600000) / 60000);
+    const seconds = formatElapsedTime((elapsedTime % 60000) / 1000);
 
-    clearInterval(captureIntervalId);
-    clearInterval(elapsedTimeIntervalId);
-
-    isRecordingStopped = true;
-    sendTime(Date.now());
+    elapsedTimeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
 }
 
-function cautionAlert(e) {
-    if (flag === 1) {
-        if (confirm("현재 반응 분석이 진행중입니다. 중단하시겠습니까?\n강의 내용은 저장되지 않습니다.")) {
-        } else {
-            e.preventDefault();
-        }
+function formatElapsedTime(time) {
+    return Math.floor(time).toString().padStart(2, '0')
+}
+
+function handleRecordingInterval() {
+    if (!recorder) {
+        return;
+    }
+
+    if (recorder.state === "recording") {
+        recorder.stop();
+        recorder.onstop = processRecordedMedia;
+    }
+
+    if (recorder.state === "inactive") {
+        recorder.start();
+        recordingElapsedTime += recordingInterval;
     }
 }
 
-function sendTime(endTime) {
-    const formData = new FormData();
-    formData.append('lecture_id', lecture_id);
-    formData.append('start_time', toTimeString(startTime));
-    formData.append('end_time', toTimeString(endTime));
+async function processRecordedMedia() {
+    const video = new Blob(recordedVideoChunks, {type: "video/webm"});
 
-    $.ajax({
-        url: '/live/time/',
-        data: formData,
-        method: 'POST',
-        processData: false,
-        contentType: false,
-        success: function (result) {
-            console.log('성공');
-            $('#loading').show();
-            $('body').css('overflow', 'hidden');
-        },
-        error: function (request, status, error) {
-            console.log('에러');
-            console.log(request);
-            console.log(status);
-            console.log(error);
-        },
-        complete: function () {
-            console.log('완료');
-            checkAndHideLoading();
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(async (image) => {
+        try {
+            await uploadRecordedMedia(image, video);
+        } catch (error) {
+            console.error(error);
         }
-    })
+    }, 'image/png');
+
+    recordedVideoChunks = [];
 }
 
-function toTimeString(timestamp) {
-    const date = new Date(timestamp);
 
-    return date.toISOString().split('T')[1].split('.')[0];
-}
-
-function sendFile(image, video) {
-    console.log('센드파일')
+function uploadRecordedMedia(image, video) {
     const formData = new FormData();
-    formData.append('lecture_id', lecture_id);
-    formData.append('time', time);
+    formData.append('lecture_id', currentLectureId);
+    formData.append('time', recordingElapsedTime);
     formData.append('image', image);
     formData.append('video', video);
 
-    remainingDbSaves += 1;
+    pendingUploadsCount += 1;
 
     $.ajax({
         url: '/live/video/',
@@ -153,10 +106,10 @@ function sendFile(image, video) {
         processData: false,
         contentType: false,
         success: function (result) {
-            console.log('성공');
+            console.log('Upload recorded media');
 
-            remainingDbSaves -= 1;
-            checkAndHideLoading();
+            pendingUploadsCount -= 1;
+            completeRecordingSession();
 
             const data = $.parseJSON(result);
             if ($.isEmptyObject(data)) {
@@ -189,20 +142,75 @@ function sendFile(image, video) {
     })
 }
 
-function checkAndHideLoading() {
-    if (isRecordingStopped && (remainingDbSaves === 0)) {
+function stopRecording() {
+    if (!confirmStopRecording()) {
+        return;
+    }
+
+    console.log("Stop recording");
+    recorder.stop();
+    videoElement.srcObject.getTracks().forEach(track => track.stop());
+
+    clearInterval(recordingIntervalId);
+    clearInterval(elapsedTimeUpdateIntervalId);
+
+    isRecordingStopped = true;
+    submitLectureTimes(Date.now());
+}
+
+function confirmStopRecording() {
+    if (isRecording && !isRecordingStopped) {
+        return confirm("현재 반응 분석이 진행 중입니다. 중단하시겠습니까?");
+    }
+
+    return false;
+}
+
+function submitLectureTimes(recordingEndTime) {
+    const formData = new FormData();
+    formData.append('lecture_id', currentLectureId);
+    formData.append('start_time', toTimeString(recordingStartTime));
+    formData.append('end_time', toTimeString(recordingEndTime));
+
+    $.ajax({
+        url: '/live/time/',
+        data: formData,
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            console.log('Submit lecture times');
+            $('#loading').show();
+            $('body').css('overflow', 'hidden');
+        },
+        error: function (request, status, error) {
+            console.log('에러');
+            console.log(request);
+            console.log(status);
+            console.log(error);
+        },
+        complete: function () {
+            console.log('완료');
+            completeRecordingSession();
+        }
+    })
+}
+
+function toTimeString(timestamp) {
+    return new Date(timestamp).toISOString().split('T')[1].split('.')[0];
+}
+
+function completeRecordingSession() {
+    if (isRecordingStopped && (pendingUploadsCount === 0)) {
         setTimeout(function () {
-            // $('#loading').hide();
             $('body').css('overflow', 'auto');
-            location.href = '/report/result/' + lecture_id + '/';
+            location.href = '/report/result/' + currentLectureId + '/';
         }, 5000);
     }
 }
 
-recordButton.addEventListener("click", videoStart);
+startButton.addEventListener("click", initiateRecording);
 stopButton.addEventListener("click", stopRecording);
-recordButton.addEventListener("click", videoStart);
-stopButton.addEventListener("click", stopRecording);
-navButton.forEach((e) => {
-    e.addEventListener('click', cautionAlert)
+navigationButtons.forEach((button) => {
+    button.addEventListener('click', stopRecording)
 });

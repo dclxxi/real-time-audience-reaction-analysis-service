@@ -5,46 +5,60 @@
     <!-- 핵심 테마 CSS (부트스트랩 포함) -->
     <link href="{% static 'css/report-page.css' %}" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @media (min-width: 1200px) {
+            .chart-container {
+                flex-direction: column;
+            }
+        }
 
+        .box {
+            margin-left: 30px;
+            margin-top: 60px;
+            margin-bottom: 50px;
+            border: 1px solid black;
+        }
+    </style>
 
-<body>
-    <main>
+    <main style="padding-top: 80px !important;">
         <div class="mb-auto p-5 container contents-center">
-            <section class="section-1" style="width: 100%">
-                <h3>강의 정보</h3>
-                <div class="lecture-content">
-                    <div class="lecture-right">
-                        <h4>강의 주제</h4>
-                        <p>{{ lecture.topic }}</p>
+            <div style="width: 100%">
+                <h3 style="margin-bottom: 10px; font-size: 35px;!important;">&bull; &nbsp;{{ lecture.topic }}</h3>
+                <div style="display: flex; flex-direction: row;">
+                    <div class="lecture-content">
                         <h4>강의자</h4>
                         <p>{{ lecture.user.name }}</p>
+                        <h4>카테고리</h4>
+                        <p>{{ lecture.category }}</p>
                     </div>
-                    <div class="lecture-left">
+                    <div class="lecture-content">
                         <h4>강의 일자</h4>
                         <p>{{ lecture.datetime|date:"Y.m.d" }}</p>
                         <h4>강의 시간</h4>
                         <p>{{ time_diff }}분</p>
                     </div>
                 </div>
-            </section>
-
-            <hr style="width: 100%">
-
-            <div class="chart-content row contents-center">
-                <div class="col-12 col-lg-6">
-                    <canvas id="chart-left"></canvas>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <canvas id="chart-right"></canvas>
-                </div>
             </div>
 
             <hr style="width: 100%">
+            <div class="chart-container" style="display: flex; flex-direction: row; margin-top:80px;">
+                <div style="padding-right: 20px;">
+                    <div>
+                        <canvas id="chart-left" style="width: 688px; height: 400px;"></canvas>
+                    </div>
+                    <hr style="border: 1px solid lightgrey">
+                    <div style="width: auto">
+                        <canvas id="chart-right" style="width: 688px; height: 400px;"></canvas>
+                    </div>
+                </div>
+                <div class="overall-feedback" style="border-left: 1px solid lightgrey;">
+                    <h4 style="padding: 12px; border-left: 5px solid black">피드백</h4>
+                    <div id="feedback-display" style="white-space: pre-wrap; padding: 20px; font-size: 20px;">
+                        그래프 위에 마우스를 올려 피드백을 확인하세요.
+                    </div>
+                </div>
+            </div>
 
-            <section class="overall-feedback">
-                <h4>피드백</h4>
-                <div id="feedback-display" style="white-space: pre-wrap;">그래프 위에 마우스를 올려 피드백을 확인하세요.</div>
-            </section>
 
         </div>
     </main>

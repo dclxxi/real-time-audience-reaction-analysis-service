@@ -34,6 +34,8 @@ def result(request, id):
         reactions_json = json.dumps(reactions_with_feedbacks, ensure_ascii=False)
         time_diff = calculate_elapsed_time(lecture.start_time, lecture.end_time)
 
+        lecture.category += display_category(lecture.category)
+
         context = {
             'lecture': lecture,
             'reactions_json': reactions_json,
@@ -68,6 +70,19 @@ def calculate_elapsed_time(start_time, end_time):
         return round(time_diff.total_seconds() / 60)
 
     return 0
+
+
+def display_category(category):
+    if category == '교육용':
+        return ': 강의 및 워크숍, 학습 효과 분석'
+    elif category == '기업용':
+        return ': 회의 및 프레젠테이션, 직원 교육'
+    elif category == '공연예술':
+        return ': 연극, 뮤지컬, 콘서트, 대중 강연'
+    elif category == '정치사회':
+        return ': 선거 유세, 공공 포럼, 토론'
+    else:
+        return '기타'
 
 
 @login_required
