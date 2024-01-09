@@ -26,20 +26,22 @@ def result(request, id):
             'neutral': sum(reaction.neutral for reaction in reactions) / reaction_count,
             'positive': sum(reaction.negative for reaction in reactions) / reaction_count,
         }
-        # averages = []
-        # averages.append(sum(reaction.concentration for reaction in reactions) / reaction_count)
-        # averages.append(sum(reaction.positive for reaction in reactions) / reaction_count)
-        # averages.append(sum(reaction.neutral for reaction in reactions) / reaction_count)
-        # averages.append(sum(reaction.negative for reaction in reactions) / reaction_count)
 
+        reactions = Reaction.objects.filter(lecture=lecture).order_by("time")
+        jsonDec = json.decoder.JSONDecoder()
         reactions_with_feedbacks = [
             {
-                'time': reaction.time,
-                'concentration': reaction.concentration,
-                'negative': reaction.negative,
-                'neutral': reaction.neutral,
-                'positive': reaction.positive,
-                'feedback': escape_control_characters(reaction.feedback.content) if reaction.feedback else '피드백이 없습니다.',
+                "time": reaction.time,
+                "concentration": reaction.concentration,
+                "negative": reaction.negative,
+                "neutral": reaction.neutral,
+                "positive": reaction.positive,
+                "feedback": escape_control_characters(reaction.feedback.content)
+                if reaction.feedback
+                else "피드백이 없습니다.",
+                "feedback_strength": jsonDec.decode(reaction.feedback.strength),
+                "feedback_weakness": jsonDec.decode(reaction.feedback.weakness),
+                "feedback_improvement": jsonDec.decode(reaction.feedback.improvement),
             }
             for reaction in reactions
         ]
@@ -55,8 +57,6 @@ def result(request, id):
             'averages': averages,
             'time_diff': time_diff,
         }
-
-        print(averages)
 
         return render(request, 'report/report_page.html', context)
 

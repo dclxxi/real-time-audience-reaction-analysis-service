@@ -32,7 +32,7 @@ def info(request):
             return JsonResponse({'error': 'Missing data'}, status=400)
 
         user = request.user
-        lecture = Lecture(topic=topic, category=category, user=user)
+        lecture = Lecture(topic=topic, user=user)
         lecture.save()
 
         request.session["lecture_id"] = lecture.id
@@ -104,9 +104,34 @@ def process_media(request):
 
     # feedback_content = generate_feedback(lecture.topic, lecture.category, audio_content, reaction)
     feedback_content = "f{lecture.topic} 주제의 피드백입니다."
+
+    type = ["강점:", "약점:", "개선 방법:"]
+    gpt_answer = {}
+    print(feedback_content)
+    k = 0
+    for text in feedback_content.split("\n"):
+        text = text.strip()
+        print("출력", text)
+        if len(text) != 0:
+            if text in type:
+                text = text.split(":")[0]
+                gpt_answer[text] = gpt_answer.get(text, [])
+                k = text
+            else:
+                text = text[2:].strip()
+                gpt_answer[k].append(text)
+    print(gpt_answer)
+    strength_content = gpt_answer["강점"]
+    weakness_content = gpt_answer["약점"]
+    improve_content = gpt_answer["개선 방법"]
+
+    print(gpt_answer)
     feedback = Feedback(
         reaction=reaction,
-        content=feedback_content
+        content=feedback_content,
+        strength=json.dumps(strength_content),
+        weakness=json.dumps(weakness_content),
+        improvement=json.dumps(improve_content),
     )
     feedback.save()
 

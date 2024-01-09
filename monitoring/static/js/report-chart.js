@@ -3,6 +3,9 @@ const chartData = {
     concentrations: [],
     reactions: [],
     feedbacks: [],
+    strengths: [],
+    weaknesses: [],
+    improvements: [],
 };
 
 
@@ -71,6 +74,9 @@ function processReactionsData(reactions) {
             negative: reaction.negative
         });
         chartData.feedbacks.push(reaction.feedback);
+        chartData.strengths.push(reaction.feedback_strength);
+        chartData.weaknesses.push(reaction.feedback_weakness);
+        chartData.improvements.push(reaction.feedback_improvement);
     });
 
     initLineChart();
@@ -121,9 +127,28 @@ function initLineChart() {
                     const index = elements[0].index;
                     const reaction = chartData.reactions[index];
                     const feedback = chartData.feedbacks[index];
-
+                    const strength = chartData.strengths[index];
+                    const weakness = chartData.weaknesses[index];
+                    const improvement = chartData.improvements[index];
+                    const tmp = document.createElement("div")
+                    let strength_txt = ''
+                    let weakness_txt = ''
+                    let improvement_txt = ''
+                    for (var x of strength){
+                        strength_txt += '- ' + x + '\n\n';
+                    }
+                    for (var x of weakness){
+                        weakness_txt += '- ' + x + '\n\n';
+                    }
+                    for (var x of improvement){
+                        improvement_txt += '- ' + x + '\n\n';
+                    }
+                    // document.querySelector(".take1").append(tmp);
                     updateBarChart(reaction.positive, reaction.neutral, reaction.negative);
-                    document.getElementById('feedback-display').innerHTML = feedback.replace(/\\n/g, '<br>');
+                    // document.getElementById('feedback-display').innerHTML = feedback.replace(/\\n/g, '<br>');
+                    document.querySelector(".take1").innerHTML = strength_txt.replace(/\\n/g, '<br>');
+                    document.querySelector(".take2").innerHTML = weakness_txt.replace(/\\n/g, '<br>');
+                    document.querySelector(".take3").innerHTML = improvement_txt.replace(/\\n/g, '<br>');
                 }
             },
         }
