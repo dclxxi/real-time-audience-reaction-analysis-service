@@ -75,12 +75,13 @@ def run_stt(bucket_name, upload_file_name):
     return audio_content
 
 
-def generate_feedback(topic, prompt, reaction):
+def generate_feedback(topic, category, prompt, reaction):
     content = (
-        f"강의 주제: {topic}\n"
+        f"주제: {topic}\n"
+        f"카테고리: {category}\n"
         f"청중 반응: 집중도 {reaction.concentration}%, 긍정 {reaction.positive}%, "
         f"중립 {reaction.neutral}%, 부정 {reaction.negative}%\n"
-        f"강의 내용: {prompt}"
+        f"내용: {prompt}"
     )
     completion = openai.chat.completions.create(
         model="gpt-3.5-turbo",
