@@ -47,7 +47,7 @@ function initDoughnutChart() {
 
                 const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
                 const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-                const text = "평균 집중도: " + averages.concentration + "%";
+                const text = "평균 집중도: " + Math.round(averages.concentration) + "%";
 
                 ctx.fillText(text, centerX, centerY);
                 ctx.restore();
