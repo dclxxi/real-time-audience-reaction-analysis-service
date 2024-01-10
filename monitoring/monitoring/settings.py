@@ -27,7 +27,7 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = "django-insecure-8e6c5+xq_l-f=j0%e@48bunm%iko+y3k=9$fuw1^6p4^in%!k^"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -78,13 +78,6 @@ WSGI_APPLICATION = "monitoring.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.mysql",
@@ -97,17 +90,17 @@ DATABASES = {
 #     }
 # }
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "HOST": os.environ.get("MYSQL_HOST", "localhost"),
-#         "NAME": os.environ.get("MYSQL_DB_NAME"),
-#         "USER": os.environ.get("MYSQL_USER_NAME"),
-#         "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
-#         "PORT": "3306",
-#         "OPTIONS": {"charset": "utf8mb4"},
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "HOST": os.environ.get("MYSQL_HOST", "localhost"),
+        "NAME": os.environ.get("MYSQL_DB_NAME"),
+        "USER": os.environ.get("MYSQL_USER_NAME"),
+        "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
+        "PORT": "3306",
+        "OPTIONS": {"charset": "utf8mb4"},
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
