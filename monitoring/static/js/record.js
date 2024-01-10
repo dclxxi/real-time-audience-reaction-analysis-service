@@ -12,6 +12,7 @@ let recordingIntervalId;
 let elapsedTimeUpdateIntervalId;
 let recordingStartTime;
 let recordingElapsedTime;
+let isSaved = false;
 let isRecording = false;
 let isRecordingStopped = false;
 let pendingUploadsCount = 0;
@@ -131,9 +132,12 @@ function uploadRecordedMedia(image, video) {
                 console.log('부정')
                 emotion.attr("src", "/static/img/emotion/bad.png");
             }
+
+            isSaved = true;
         },
         error: function (request, status, error) {
             console.log('에러');
+            console.log('code:' + request.status + '\n' + 'message:' + request.responseText + '\n' + 'error:' + error);
             console.log(request);
             console.log(status);
             console.log(error);
@@ -153,16 +157,48 @@ function stopRecording() {
     clearInterval(recordingIntervalId);
     clearInterval(elapsedTimeUpdateIntervalId);
 
+    if (!isSaved) {
+        deleteLecture()
+        return;
+    }
+
     isRecordingStopped = true;
     submitLectureTimes(Date.now());
 }
 
 function confirmStopRecording() {
+    if (isRecording && !isSaved) {
+        return confirm("분석된 결과가 없습니다. 중단하시겠습니까?");
+    }
+
     if (isRecording && !isRecordingStopped) {
         return confirm("현재 반응 분석이 진행 중입니다. 중단하시겠습니까?");
     }
 
     return false;
+}
+
+function deleteLecture() {
+    const formData = new FormData();
+    formData.append('lecture_id', currentLectureId);
+
+    $.ajax({
+        url: '/report/list/delete/',
+        data: formData,
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            console.log('성공')
+            location.replace('/report/list');
+        },
+        error: function (result, status, error) {
+            console.log('에러')
+            console.log(result);
+            console.log(status);
+            console.log(error);
+        }
+    })
 }
 
 function submitLectureTimes(recordingEndTime) {
