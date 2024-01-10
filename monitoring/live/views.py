@@ -103,8 +103,7 @@ def process_media(request):
 
     audio_content = run_stt(BUCKET_NAME, upload_file_name)
 
-    feedback_content = generate_feedback(lecture.topic, audio_content, reaction)
-    # feedback_content = "f{lecture.topic} 주제의 피드백입니다."
+    feedback_content = generate_feedback(lecture.topic, lecture.category, audio_content, reaction)
     feedback = Feedback(
         reaction=reaction,
         content=feedback_content
