@@ -38,7 +38,7 @@
             <div style="width: 100%">
                 <div style="display: flex; flex-direction: row;">
                     {{ averages|json_script:"averages-data" }}
-                    <div class="lecture-content">
+                    <div class="lecture-content" style="width: 50%;">
                         <h4>강의자</h4>
                         <p>{{ lecture.user.name }}</p>
                         <h4>카테고리</h4>
@@ -48,8 +48,8 @@
                         <h4>강의 시간</h4>
                         <p>{{ time_diff }}분</p>
                     </div>
-                    <div class="lecture-content" style="padding: 0 30px;">
-                        <canvas id="emotionDoughnutChart"></canvas>
+                    <div class="lecture-content" style="width: 50%; padding: 0 50px;">
+                        <canvas id="emotionDoughnutChart" style="height: 391px"></canvas>
                     </div>
                 </div>
             </div>
