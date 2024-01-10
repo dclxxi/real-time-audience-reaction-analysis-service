@@ -21,16 +21,12 @@ def result(request, id):
         reaction_count = reactions.count()
 
         averages = {
-            'concentration': sum(reaction.concentration for reaction in reactions) / reaction_count,
-            'negative': sum(reaction.positive for reaction in reactions) / reaction_count,
-            'neutral': sum(reaction.neutral for reaction in reactions) / reaction_count,
-            'positive': sum(reaction.negative for reaction in reactions) / reaction_count,
+            'concentration': sum(
+                reaction.concentration for reaction in reactions) / reaction_count if reaction_count else 0,
+            'negative': sum(reaction.positive for reaction in reactions) / reaction_count if reaction_count else 0,
+            'neutral': sum(reaction.neutral for reaction in reactions) / reaction_count if reaction_count else 0,
+            'positive': sum(reaction.negative for reaction in reactions) / reaction_count if reaction_count else 0,
         }
-        # averages = []
-        # averages.append(sum(reaction.concentration for reaction in reactions) / reaction_count)
-        # averages.append(sum(reaction.positive for reaction in reactions) / reaction_count)
-        # averages.append(sum(reaction.neutral for reaction in reactions) / reaction_count)
-        # averages.append(sum(reaction.negative for reaction in reactions) / reaction_count)
 
         reactions_with_feedbacks = [
             {
