@@ -52,8 +52,6 @@ def result(request, id):
             'time_diff': time_diff,
         }
 
-        print(averages)
-
         return render(request, 'report/report_page.html', context)
 
     if request.method == 'POST':
