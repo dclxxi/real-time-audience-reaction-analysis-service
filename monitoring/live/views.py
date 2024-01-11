@@ -12,7 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 from monitoring.settings import MEDIA_ROOT
 from report.models import Feedback, Reaction
 from .models import Lecture
-from .utils import analyze_image, extract_audio, upload_to_storage, save_blob, clean_up_files
+from .utils import analyze_image, extract_audio, upload_to_storage, save_blob, clean_up_files, run_stt, \
+    generate_feedback
 
 BUCKET_NAME = 'stt-test-bucket-aivle'
 
@@ -75,7 +76,6 @@ def process_media(request):
     save_blob(image, image_path)
 
     results = analyze_image(image_path)  # haarcascade 모델
-    #  results = analyze_image2(image_path) # mediapipe 모델
 
     if not results or sum(results.values()) == 0:
         clean_up_files([image_path])
@@ -100,10 +100,9 @@ def process_media(request):
     upload_file_name = f"{uuid_name}.mp3"
     upload_to_storage(BUCKET_NAME, audio_path, upload_file_name)
 
-    # audio_content = run_stt(BUCKET_NAME, upload_file_name)
+    audio_content = run_stt(BUCKET_NAME, upload_file_name)
 
-    # feedback_content = generate_feedback(lecture.topic, lecture.category, audio_content, reaction)
-    feedback_content = "f{lecture.topic} 주제의 피드백입니다."
+    feedback_content = generate_feedback(lecture.topic, lecture.category, audio_content, reaction)
     feedback = Feedback(
         reaction=reaction,
         content=feedback_content
