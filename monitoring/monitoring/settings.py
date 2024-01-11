@@ -11,11 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 env = environ.Env(DEBUG=(bool, True))
 
@@ -25,6 +25,8 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-8e6c5+xq_l-f=j0%e@48bunm%iko+y3k=9$fuw1^6p4^in%!k^"
+STT_API_KEY = env('STT_API_KEY')
+GPT_API_KEY = env('GPT_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,25 +80,13 @@ WSGI_APPLICATION = "monitoring.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "HOST": env("MYSQL_HOST"),
-#         "NAME": env("MYSQL_DB_NAME"),
-#         "USER": env("MYSQL_USER_NAME"),
-#         "PASSWORD": env("MYSQL_PASSWORD"),
-#         "PORT": "3306",
-#         "OPTIONS": {"charset": "utf8mb4"},
-#     }
-# }
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "HOST": os.environ.get("MYSQL_HOST", "localhost"),
-        "NAME": os.environ.get("MYSQL_DB_NAME"),
-        "USER": os.environ.get("MYSQL_USER_NAME"),
-        "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
+        "HOST": env("MYSQL_HOST"),
+        "NAME": env("MYSQL_DB_NAME"),
+        "USER": env("MYSQL_USER_NAME"),
+        "PASSWORD": env("MYSQL_PASSWORD"),
         "PORT": "3306",
         "OPTIONS": {"charset": "utf8mb4"},
     }

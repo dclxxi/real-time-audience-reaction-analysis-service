@@ -8,18 +8,17 @@ from django.core.files.storage import default_storage
 from google.cloud import speech
 from google.cloud import storage
 from google.oauth2 import service_account
-from matplotlib import pyplot as plt
 from openai import OpenAI
 from tensorflow.keras.models import load_model
 
-KEY_PATH = "C:/Users/user/Downloads/infra-earth-408904-fcc745c63739.json"
+from monitoring import settings
+
+KEY_PATH = settings.STT_API_KEY
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
 
 client = storage.Client(credentials=credentials, project=credentials.project_id)
 
-openai = OpenAI(
-    api_key="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"
-)
+openai = OpenAI(api_key=settings.GPT_API_KEY)
 
 
 def save_blob(file, path):
@@ -93,9 +92,9 @@ def generate_feedback(topic, category, prompt, reaction):
                            "발음이나 억양, 속도 등의 음성적 특성에 대한 피드백은 제외하고, "
                            "오로지 강의 내용과 청중의 반응에 초점을 맞춰주세요.\n"
                            "[피드백 형식]\n"
-                           "강점: [한 줄로 강점을 기재해 주세요]\n"
-                           "약점: [한 줄로 약점을 기재해 주세요]\n"
-                           "개선 방법: [한 줄로 개선 방법을 기재해 주세요]",
+                           "강점:\n- [강점을 기재해 주세요]\n"
+                           "약점:\n- [약점을 기재해 주세요]\n"
+                           "개선 방법:\n- [개선 방법을 기재해 주세요]",
             },
             {"role": "user", "content": content},
         ],
@@ -199,8 +198,8 @@ def analyze_image(image_path):
         draw_bounding_box(face_coordinates, rgb_image, color)
         draw_text(face_coordinates, rgb_image, emotion_text, color, -20, -20, 0.7, 2)
 
-    plt.imshow(rgb_image)
-    cv2.imwrite('result_emotion_image.jpg', rgb_image)
+    # plt.imshow(rgb_image)
+    # cv2.imwrite('result_emotion_image.jpg', rgb_image)
 
     def calculate_percentage(emotion):
         if len(emotion) == 0:
